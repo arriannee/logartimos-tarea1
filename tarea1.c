@@ -41,8 +41,13 @@ NodoMTree* crearNodo(Punto p, double cr) {
 // Para simplificar las implementaciones, diremos que cada nodo tendrá
 // que tener una capacidad mínima de b = 0.5 · B y capacidad máxima de B.
 
+# define B 10  // 10 por mientras pq tira error si pongo "B"
 # define b 0.5 * B 
-# define B 10 // 10 por mientras pq tira error si pongo "B"
+
+
+/*******************************
+Métodos para construir un M-Tree
+********************************/
 
 // Método Ciaccia-Patella (CP)
 NodoMTree* metodoCP(int n, Punto* P) {
@@ -125,4 +130,106 @@ NodoMTree* metodoCP(int n, Punto* P) {
 
 // Método Sexton-Swinbank (SS)
 
+// Para explicar el algoritmo bulk-loader se definen las siguientes funciones:
 
+// Cluster: retorna un conjunto de clusters de tamaño entre b y B.
+
+// Estructura para un cluster
+typedef struct {
+    Punto* points;  // Puntos en el cluster
+    int count;      // Número de puntos
+} Cluster;
+
+// Función para encontrar los pares más cercanos de clusters
+void find_closest_clusters(Cluster* clusters, int numClusters, int* idx1, int* idx2) {
+    double min_dist = 0; 
+    for (int i = 0; i < numClusters; i++) {
+        for (int j = i + 1; j < numClusters; j++) {
+            double dist = distancia(clusters[i].points[0], clusters[j].points[0]);
+            if (dist < min_dist) {
+                min_dist = dist;
+                *idx1 = i;
+                *idx2 = j;
+            }
+        }
+    }
+}
+
+// Función de cluster para agrupar puntos en clusters de tamaño entre b y B
+// Input: Un set de puntos Cin de tamaño mínimo b
+Cluster* cluster(Punto* Cin, int point_count) {
+
+    // Paso 1: Se define Cout = {} y C = {}
+    Cluster* Cout = (Cluster*)malloc(point_count * sizeof(Cluster));
+    Cluster* C = (Cluster*)malloc(point_count * sizeof(Cluster));
+    int count_C = 0; // Número de clusters en C
+    int count_Cout = 0; // Número de clusters en Cout
+
+    // Paso 2: Por cada punto p ∈ Cin se añade {p} a C
+    for (int i = 0; i < point_count; i++) {
+        C[count_C].points = (Punto*)malloc(sizeof(Punto));
+        C[count_C].points[0] = Cin[i];
+        C[count_C].count = 1;
+        count_C++;
+    }
+
+    // Paso 3: Mientras |C| > 1 (mientras haya más de un cluster en C)
+    while (count_C > 1) {
+        int idx1 = -1;
+        int idx2 = -1;
+
+        // Paso 3.1: Encontrar los pares más cercanos de clusters
+        find_closest_clusters(C, count_C, &idx1, &idx2);
+
+        // Tal que |c1| >= |c2|
+        // ...
+
+        // Paso 3.2: Si |c1 ∪ c2| ≤ B, se remueve c1 y c2 de C y se añade c1 ∪ c2 a C.
+        // (Si la unión de los clusters más cercanos no excede B)
+        if (idx1 >= 0 && idx2 >= 0) {
+            if ((C[idx1].count + C[idx2].count) <= B) {
+                // Combinar los clusters
+                Punto* new_points = (Punto*)malloc((C[idx1].count + C[idx2].count) * sizeof(Punto));
+                int index = 0;
+
+                // Copiar puntos del primer cluster
+                for (int i = 0; i < C[idx1].count; i++) {
+                    new_points[index++] = C[idx1].points[i];
+                }
+
+                // Copiar puntos del segundo cluster
+                for (int i = 0; i < C[idx2].count; i++) {
+                    new_points[index++] = C[idx2].points[i];
+                }
+
+                free(C[idx1].points);
+                free(C[idx2].points);
+
+                // No sé cómo seguir aquí
+            } else {
+                // Paso 3.2: Si no, se remueve c1 de C y se añade c1 a Cout.
+                Cout[count_Cout++] = C[idx1];
+
+                for (int i = idx1; i < count_C - 1; i++) {
+                    C[i] = C[i + 1];
+                }
+
+            count_C--; // Reducir el número total de clusters
+            }
+        }
+    }
+
+    // Paso 4: Sea c el último elemento de C
+    Cluster c = C[0];
+
+    // Paso 5: Si hay elementos en Cout
+    if (count_Cout > 0) {
+        // Paso 5.1 definimos c′ como el vecino más cercano a c en Cout. Removemos c′ de Cout.
+        Cluster c_prima; // Incompleto
+    }
+
+}
+
+NodoMTree* metodoSS(Punto* points, int n) {
+
+}

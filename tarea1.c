@@ -54,8 +54,11 @@ NodoMTree* metodoCP(int n, Punto* P) {
 
     // Paso 1: Si |P| ≤ B, se crea un árbol T , se insertan todos los puntos a T y se retorna T
     if (n <= B) {
-        NodoMTree* nodo = crearNodo(P[0], 0.0); // Crea el primer nodo con el primer punto
-        return nodo;
+        NodoMTree* T;
+        for (int i = 0; i < n; i++){
+            crearNodo(P[i], 0.0); // Insertar los puntos de P
+        }
+        return T;
     }
 
     // Paso 2: De manera aleatoria se eligen k = min(B, n/B) puntos de P, que los llamaremos samples pf1, ..., pfk. Se insertan en un conjunto F de samples

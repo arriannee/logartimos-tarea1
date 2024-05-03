@@ -3,65 +3,11 @@
 #include <math.h>
 #include <string.h>
 
-// Definición de la estructura para las coordenadas de un punto.
-typedef struct Punto {
-    double x;
-    double y;
-} Punto;
-
-// Definición de la estructura de una entrada en el M-Tree.
-typedef struct Entrada {
-    Punto p;       // El punto en el espacio.
-    double cr;     // Radio cobertor.
-    struct Nodo *hijo; // Puntero al nodo hijo (solo para nodos internos).
-} Entrada;
-
-// Definición de la estructura del nodo del M-Tree.
-typedef struct Nodo {
-    int esHoja;          // Para indicar si el nodo es una hoja.
-    int numEntradas;     // Número de entradas almacenadas en el nodo.
-    Entrada *entradas;   // Array de entradas.
-    struct Nodo *hijo;
-} Nodo;
-
-typedef struct MTree {
-    Nodo *raiz;
-    int B;   // Capacidad máxima de entradas en cada nodo.
-} MTree;
-
-typedef struct Cluster {
-    Punto *puntos;    // Array dinámico de puntos en el cluster.
-    int numPuntos;    // Número actual de puntos en el cluster.
-    int capacidad;    // Capacidad máxima del array de puntos.
-    Punto medoide;    // Medoide actual del cluster.
-    double radioCobertor; 
-} Cluster;
-
-
-// Función para crear un nuevo nodo.
-Nodo *crearNodo(int esHoja, int B) {
-    Nodo *nuevoNodo = (Nodo *)malloc(sizeof(Nodo));
-    nuevoNodo->esHoja = esHoja;
-    nuevoNodo->numEntradas = 0;
-    nuevoNodo->entradas = (Entrada *)malloc(B * sizeof(Entrada));
-    return nuevoNodo;
-}
-
-// Función para inicializar el M-Tree.
-MTree *crearMTree(int B) {
-    MTree *mtree = (MTree *)malloc(sizeof(MTree));
-    mtree->B = B;
-    mtree->raiz = crearNodo(1, B);  // Inicialmente, la raíz es una hoja.
-    return mtree;
-}
-
-// Función para calcular la distancia euclidiana entre dos puntos.
-double distanciaEuclidiana(Punto p1, Punto p2) {
-    return sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
-}
+#include "mtree.h"
 
 void calcularMedoide(Cluster *cluster) {
-    double minDistancia = INFINITY, sumaDistancias;
+    double minDistancia = INFINITY;
+    int sumaDistancias = 0;
     int medoideIndex = 0;
 
     for (int i = 0; i < cluster->numPuntos; i++) {
@@ -169,7 +115,7 @@ Cluster combinarClusters(Cluster *c1, Cluster *c2) {
     return nuevo;
 }
 
-void splitMinMaxPolicy(Cluster *original, Cluster *split1, Cluster *split2, int B) {
+void splitMinMaxPolicy(Cluster *original, Cluster *split1, Cluster *split2, int B) { // REVISAR
     double minMaxRadio = INFINITY;
     // Variables temporales para los splits de prueba
     Cluster tempSplit1, tempSplit2;
@@ -279,9 +225,13 @@ Cluster *cluster(Punto *Cin, int numPuntos, int b, int B) {
     return Cout;
 }
 
-Nodo *OutputHoja(Cluster *Cin, int numPuntos) {}
+Nodo *OutputHoja(Cluster *Cin, int numPuntos) {
+    return 0;
+}
 
-Nodo *OutputInterno() {}
+Nodo *OutputInterno() {
+    return 0;
+}
 
 
 

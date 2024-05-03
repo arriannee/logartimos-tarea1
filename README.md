@@ -4,7 +4,7 @@ Este proyecto implementa dos métodos para construir un árbol métrico (M-Tree)
 
 ## *Estructuras de Datos*
 
-Punto: Representa un punto en un plano bidimensional con coordenadas x y y.
+Punto: Representa un punto en un plano bidimensional con coordenadas x e y.
 
 NodoMTree: Representa un nodo en el M-Tree, con un punto central p, un radio de cobertura cr, y una lista de hijos.
 

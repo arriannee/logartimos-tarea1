@@ -22,6 +22,12 @@ struct Nodo {
     std::vector<Entrada> entradas;  // Conjunto de entradas
     int B;                          // Capacidad máxima de entradas en cada nodo
 
+    // Método para añadir un Punto dentro del nodo
+    void agregarPunto(const Punto& punto) {
+        Entrada nuevaEntrada(punto, 0, nullptr); // Crear la nueva entrada que se añadirá
+        entradas.push_back(nuevaEntrada);        // Añadir la entrada al final del vector
+    }   
+
     Nodo(std::vector<Entrada>& _entradas, int _B) : entradas(_entradas), B(_B) {} // Constructor  
 };
 

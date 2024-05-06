@@ -13,14 +13,14 @@ struct Punto {
 struct Entrada {
     Punto p;
     double cr;                      // Radio covertor
-    Entrada *a;                     // Dirección en disco a lapágina de su hijo
+    Entrada *a;                     // Dirección en disco a la página de su hijo
 
     Entrada(Punto _p, double _cr, Entrada *_a) : p(_p), cr(_cr), a(_a) {} // Constructor  
 };
 
 struct Nodo {
     std::vector<Entrada> entradas;  // Conjunto de entradas
-    int B;                          // Capacidad máxima de entradas en cada nodo
+    int B = 4096/sizeof(entradas);  // Capacidad máxima de entradas en cada nodo
 
     // Método para añadir un Punto dentro del nodo
     void agregarPunto(const Punto& punto) {

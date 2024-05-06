@@ -80,14 +80,19 @@ MTree* metodoCP(int n, const std::vector<Punto>& P) {
             }
         }
     }
-
+    
+    std::vector<MTree> subarboles;
     // Paso 6: Se realiza recursivamente el algoritmo CP en cada Fj , obteniendo el árbol Tj
     for (int i = 0; i < F_l.size(); i++) {
-        metodoCP(F_l.size(), F_l[i]);
+        MTree *Tj = metodoCP(F_l.size(), F_l[i]);
+        subarboles.push_back(*Tj);
+        if (Tj->raiz->entradas.size() < b){
+            
+        }
     }
 
     // Paso 7: Si la raíz del árbol es de un tamaño menor a b, se quita esa raíz, se elimina pfj de F y se trabaja con sus subárboles como nuevos Tj , . . . , Tj+p−1, se añaden los puntos pertinentes a F
-    
+
 
     
     

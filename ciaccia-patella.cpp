@@ -82,18 +82,43 @@ MTree* metodoCP(int n, const std::vector<Punto>& P) {
     }
     
     std::vector<MTree> subarboles;
-    // Paso 6: Se realiza recursivamente el algoritmo CP en cada Fj , obteniendo el árbol Tj
+    // Paso 6: Se realiza recursivamente el algoritmo CP en cada Fj, obteniendo el arbol Tj
     for (int i = 0; i < F_l.size(); i++) {
-        MTree *Tj = metodoCP(F_l.size(), F_l[i]);
-        subarboles.push_back(*Tj);
-        if (Tj->raiz->entradas.size() < b){
-            
+        MTree* Tj = metodoCP(F_l[i].size(), F_l[i]);
+        
+        // Paso 7: Verificar si la raiz del arbol Tj es de un tamaño menor a b
+        if (Tj->raiz->entradas.size() < b) {
+            std::vector<MTree*> subarboles;
+            for (auto& entrada : Tj->raiz->entradas) {
+                std::vector<Entrada> entradas_hijo;
+                if (entrada.a != nullptr) { // Si no es una hoja
+                    entradas_hijo = entrada.a->entradas;
+                }
+                Nodo* nuevo_nodo = new Nodo(entradas_hijo, B);
+                subarboles.push_back(new MTree(nuevo_nodo));
+            }
+
+            delete Tj->raiz; // Eliminar la raiz actual
+            Tj->raiz = nullptr;
+
+            // Reasignar los puntos de F_l[i] a los nuevos subarboles
+            for (int j = 0; j < F_l[i].size(); j++) {
+                int indiceMasCercano = 0;
+                double distanciaMin = distanciaEuclidiana(F_l[i][j], subarboles[0]->raiz->entradas[0].p);
+                for (int k = 1; k < subarboles.size(); k++) {
+                    double distanciaActual = distanciaEuclidiana(F_l[i][j], subarboles[k]->raiz->entradas[0].p);
+                    if (distanciaActual < distanciaMin) {
+                        indiceMasCercano = k;
+                        distanciaMin = distanciaActual;
+                    }
+                }
+                subarboles[indiceMasCercano]->raiz->agregarPunto(F_l[i][j]);
+            }
+
+            // Eliminar el punto de F que fue usado como raiz en Tj, aqui tiene el indice del sample
+            F.erase(F.begin() + i); //  i es el índice del punto de F que fue raiz
         }
     }
 
-    // Paso 7: Si la raíz del árbol es de un tamaño menor a b, se quita esa raíz, se elimina pfj de F y se trabaja con sus subárboles como nuevos Tj , . . . , Tj+p−1, se añaden los puntos pertinentes a F
-
-
-    
     
 };

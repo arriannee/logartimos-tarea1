@@ -16,7 +16,9 @@ struct Cluster {
     Punto medoide;
     double radioCobertor;
 
-    Cluster(int capacidad = 0) : puntos(capacidad), medoide(0, 0) {}
+    Cluster(int capacidad = 0) : medoide(0.0, 0.0) {
+        puntos.reserve(capacidad);  // Reservar capacidad sin inicializar elementos
+    }
 
     int numPuntos() const {
         return puntos.size();
@@ -226,7 +228,8 @@ std::tuple<Punto, double, std::unique_ptr<Nodo>> OutputHoja(Cluster& Cin) {
     // Paso 1: Calcular el medoide y el radio cobertor
     calcularMedoide(Cin);  // g es el medoide primario de Cin
     double r = 0;
-    std::unique_ptr<Nodo> C = std::make_unique<Nodo>(true, Cin.numPuntos()); // Contiene las entradas del nodo hoja
+    std::vector<Entrada> entradas;
+    std::unique_ptr<Nodo> C = std::make_unique<Nodo>(entradas, Cin.numPuntos());
 
     // Paso 2: Añadir puntos al nodo hoja
     for (const auto& p : Cin.puntos) {
@@ -241,7 +244,7 @@ std::tuple<Punto, double, std::unique_ptr<Nodo>> OutputHoja(Cluster& Cin) {
     return std::make_tuple(Cin.medoide, r, std::move(C));
 }
 
-std::tuple<Punto, double, std::unique_ptr<Nodo>> OutputInterno(const std::vector<std::tuple<Punto, double, std::unique_ptr<Nodo>>>& Cmra) {
+std::tuple<Punto, double, std::unique_ptr<Nodo>> OutputInterno(const std::vector<std::tuple<Punto, double, std::unique_ptr<Nodo>>>& Cmra, int B) {
     // Paso 1: Crear el conjunto Cin con los puntos 'g' y calcular el medoide G
     std::vector<Punto> Cin;
     for (const auto& cmra : Cmra) {
@@ -253,7 +256,7 @@ std::tuple<Punto, double, std::unique_ptr<Nodo>> OutputInterno(const std::vector
     calcularMedoide(tempCluster);
     Punto G = tempCluster.medoide;
     double R = 0;
-    auto C = std::make_unique<Nodo>(Cin.size());
+    auto C = std::make_unique<Nodo>(std::vector<Entrada>{}, B);
 
     // Paso 2: Añadir (g, r, a) a C y actualizar el radio cobertor R
     for (const auto& cmra : Cmra) {
@@ -265,7 +268,7 @@ std::tuple<Punto, double, std::unique_ptr<Nodo>> OutputInterno(const std::vector
         // fin de lo malo
 
         double distancia = distanciaEuclidiana(G, g);
-        C->entradas.emplace_back(g, r, std::move(a));
+        C->entradas.emplace_back(g, r, a.release());
         R = std::max(R, distancia + r);
     }
 

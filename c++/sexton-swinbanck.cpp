@@ -9,6 +9,10 @@
 #include <random>
 #include <chrono>
 #include <algorithm>
+#include <numeric>
+#include <cmath>
+#include <optional>
+#include <fstream>
 
 #include <optional>
 
@@ -351,6 +355,8 @@ void printTree(Nodo* nodo, int nivel = 0, int hijo = 0) {
 
 // Experimento para n = 2^10, 2^11, ..., 2^25
 int main() {
+    std::ofstream outfile("mtree_experiment_output.txt");
+
     int B = 4096 / sizeof(Entrada); // Calcular el tamaño máximo del bloque
     int b = B / 2; // Calcular el tamaño mínimo del bloque
 
@@ -377,15 +383,19 @@ int main() {
         Nodo* rootSS = SS(P, b, B);
         auto endSS = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> tiempoConstruccionSS = endSS - startSS;
-        std::cout << "Tiempo de construccion SS para n=" << n << ": " << tiempoConstruccionSS.count() << " segundos" << std::endl;
+        outfile << "Tiempo de construcción SS para n=" << n << ": " << tiempoConstruccionSS.count() << " segundos" << std::endl;
 
         // Evaluar consultas
         std::vector<int> accesosSS;
         int contadorAccesosSS = 0;
+        auto startConsulta = std::chrono::high_resolution_clock::now();
         for (const auto& q : Q) {
             int accesos = realizarConsulta(rootSS, q, radioConsulta, contadorAccesosSS);
             accesosSS.push_back(accesos);
         }
+        auto endConsulta = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> tiempoConsultaSS = endConsulta - startConsulta;
+        outfile << "Tiempo de consultas SS para n=" << n << ": " << tiempoConsultaSS.count() << " segundos" << std::endl;
 
         // Calcular estadísticas para SS
         double mediaSS = std::accumulate(accesosSS.begin(), accesosSS.end(), 0.0) / accesosSS.size();
@@ -394,8 +404,10 @@ int main() {
         }) / accesosSS.size();
         double desviacionEstandarSS = std::sqrt(varianzaSS);
 
-        std::cout << "SS - Media de accesos para n=" << n << ": " << mediaSS << ", Desviacion estandar: " << desviacionEstandarSS << ", Varianza: " << varianzaSS << std::endl;
-        std::cout << "SS - Total de accesos para n=" << n << ": " << contadorAccesosSS << std::endl;
+        outfile << "SS - Media de accesos para n=" << n << ": " << mediaSS 
+                << ", Desviación estándar: " << desviacionEstandarSS 
+                << ", Varianza: " << varianzaSS << std::endl;
+        outfile << "SS - Total de accesos para n=" << n << ": " << contadorAccesosSS << std::endl;
 
         // Imprimir el árbol
         printTree(rootSS);
@@ -404,5 +416,6 @@ int main() {
         delete rootSS;
     }
 
+    outfile.close();
     return 0;
 }

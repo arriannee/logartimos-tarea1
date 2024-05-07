@@ -307,7 +307,7 @@ Nodo* SS(const std::vector<Punto> &Cin, int b, int B) {
 }
 
 // Función para realizar las consultas
-int realizarConsulta(Nodo* root, Punto q, double radio) {
+int realizarConsulta(Nodo* root, Punto q, double radio, int& contadorAccesos) {
     int accesos = 0;
     if (root == nullptr) return accesos;
 
@@ -316,6 +316,7 @@ int realizarConsulta(Nodo* root, Punto q, double radio) {
         Nodo* nodo = nodosPorVerificar.back();
         nodosPorVerificar.pop_back();
         ++accesos;
+        ++contadorAccesos;  // Incrementar el contador de accesos
 
         for (const auto& entrada : nodo->entradas) {
             if (distanciaEuclidiana(q, entrada.p) <= radio + entrada.cr) {
@@ -326,6 +327,26 @@ int realizarConsulta(Nodo* root, Punto q, double radio) {
         }
     }
     return accesos;
+}
+
+void printTree(Nodo* nodo, int nivel = 0, int hijo = 0) {
+    if (nodo == nullptr) return;
+
+    std::string indent(nivel * 2, ' ');
+
+    if (nivel == 0) {
+        std::cout << "Entries Root Node:\n";
+    } else {
+        std::cout << indent << "Entries son " << hijo << " Node:\n";
+    }
+
+    for (int i = 0; i < nodo->entradas.size(); ++i) {
+        const auto& entrada = nodo->entradas[i];
+        std::cout << indent << "  (" << entrada.p.x << ", " << entrada.p.y << ")\n";
+        if (entrada.a != nullptr) {
+            printTree(reinterpret_cast<Nodo*>(entrada.a), nivel + 1, i);
+        }
+    }
 }
 
 // Experimento para n = 2^10, 2^11, ..., 2^25
@@ -356,12 +377,13 @@ int main() {
         Nodo* rootSS = SS(P, b, B);
         auto endSS = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> tiempoConstruccionSS = endSS - startSS;
-        std::cout << "Tiempo de construcción SS para n=" << n << ": " << tiempoConstruccionSS.count() << " segundos" << std::endl;
+        std::cout << "Tiempo de construccion SS para n=" << n << ": " << tiempoConstruccionSS.count() << " segundos" << std::endl;
 
         // Evaluar consultas
         std::vector<int> accesosSS;
+        int contadorAccesosSS = 0;
         for (const auto& q : Q) {
-            int accesos = realizarConsulta(rootSS, q, radioConsulta);
+            int accesos = realizarConsulta(rootSS, q, radioConsulta, contadorAccesosSS);
             accesosSS.push_back(accesos);
         }
 
@@ -372,7 +394,11 @@ int main() {
         }) / accesosSS.size();
         double desviacionEstandarSS = std::sqrt(varianzaSS);
 
-        std::cout << "SS - Media de accesos para n=" << n << ": " << mediaSS << ", Desviación estándar: " << desviacionEstandarSS << std::endl;
+        std::cout << "SS - Media de accesos para n=" << n << ": " << mediaSS << ", Desviacion estandar: " << desviacionEstandarSS << ", Varianza: " << varianzaSS << std::endl;
+        std::cout << "SS - Total de accesos para n=" << n << ": " << contadorAccesosSS << std::endl;
+
+        // Imprimir el árbol
+        printTree(rootSS);
 
         // Limpiar
         delete rootSS;

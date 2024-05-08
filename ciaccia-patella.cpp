@@ -2,6 +2,7 @@
 #include "mtree.cpp"
 #include <cstdlib>
 #include <vector>
+using namespace std;
 
 // Definición de B pa que el compilador no reclame BORRAR DESPUÉS ***********************
 int B = 3141592;
@@ -9,11 +10,11 @@ int b = 0.5*B;
 
 
 // Método Ciaccia-Patella (CP)
-MTree* metodoCP(int n, const std::vector<Punto>& P) {
+MTree* metodoCP(const vector<Punto>& P) {
     // Paso 1: Si |P| ≤ B, se crea un árbol T , se insertan todos los puntos a T y se retorna T
-    if (n <= B) {
+    if (P.size() <= B) {
         MTree* T;
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < P.size(); i++) {
             Punto punto = P[i];
             T->raiz->agregarPunto(punto);
         }
@@ -21,42 +22,50 @@ MTree* metodoCP(int n, const std::vector<Punto>& P) {
     }
 
     // Creamos el vector F
-    std::vector<Punto> F; // Vector F de samples
+    set<Punto> F; // Vector F de samples
 
     // Vector que almacena los F1, ... , Fk
-    std::vector<std::vector<Punto>> F_l;
+    set<tuple<set<Punto>, Punto>> F_l;
+    
+    tuple<vector<Punto>, Punto> Fi;
 
     // Paso 5: Si |F|= 1, volver al paso 2.
     while(F.size() <= 1) {
         
         // Paso 2: De manera aleatoria se eligen k = min(B, n/B) puntos de P, que los llamaremos samples pf1, ..., pfk. Se insertan en un conjunto F de samples
-        int k = std::min(B, n/B);  // Número de samples
+        int k = min(B, P.size()/B);  // Número de samples
         
 
         for (int i = 0; i < k; i++) {
-            Punto pfi = P[rand() % n]; // Se elijen samples aleatorios
-            F.push_back(pfi); // Se inserta el sample pfi en F
+            Punto pfi = P[rand() % P.size()]; // Se elijen samples aleatorios
+            F.insert(pfi); // Se inserta el sample pfi en F
         }
 
         // Paso 3: Se le asigna a cada punto en P su sample más cercano. Con eso se puede construir k conjuntos F1, . . . , Fk
-        for (int i = 0; i < F.size(); i++) {
-            std::vector<Punto> Fi;
-            F_l.push_back(Fi);
+        
+        
+        // Se crean los conjuntos Fi pertenecientes a F_l
+        for (auto i = F.begin(); i != F.end(); i++) {
+            Punto aux = *i;
+            set<Punto> conjunto;
+            conjunto.insert(*i);
+            Fi(conjunto, aux);
+            F_l.insert(Fi);
         }
         
         // Para cada elemento de P, se revisa su distancia con cada elemento de F y nos quedamos con la que sea menor    
         // Hard-code para encontrar la distancia mínima, propuesto arreglarlo.
         for (int i = 0; i < P.size(); i++) {
-            int distanciaMin = distanciaEuclidiana(P[i],F[0]);
-            int sampleMasCercano = 0;
-            for (int j = 1; j < F.size(); j++) {
-                int distanciaActual = distanciaEuclidiana(P[i], F[j]);
+            int distanciaMin = distanciaEuclidiana(P[i],*F.begin());
+            Punto sampleMasCercano = *F.begin();
+            for (auto j = F.begin() ; j != F.end(); j++) {
+                int distanciaActual = distanciaEuclidiana(P[i], *j);
                 if (distanciaActual < distanciaMin) {
-                    sampleMasCercano = j;
+                    sampleMasCercano = *j;
                     distanciaMin = distanciaActual;
                 }
             }
-            F_l[sampleMasCercano].push_back(P[i]);
+            F_l.insert(P[i]);
         }
 
         // Paso 4: Etapa de redistribución: Si algún Fj es tal que |Fj |< b:

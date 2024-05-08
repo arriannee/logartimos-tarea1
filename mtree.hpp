@@ -1,5 +1,6 @@
 #include <vector>
 #include <set> 
+using namespace std;
 
 // Clase para un punto
 struct Punto {
@@ -19,7 +20,7 @@ struct Entrada {
 };
 
 struct Nodo {
-    std::vector<Entrada> entradas;  // Conjunto de entradas
+    vector<Entrada> entradas;  // Conjunto de entradas
     int B = 4096/sizeof(entradas);  // Capacidad máxima de entradas en cada nodo
 
     // Método para añadir un Punto dentro del nodo
@@ -28,7 +29,7 @@ struct Nodo {
         entradas.push_back(nuevaEntrada);        // Añadir la entrada al final del vector
     }   
 
-    Nodo(std::vector<Entrada>& _entradas, int _B) : entradas(_entradas), B(_B) {} // Constructor  
+    Nodo(vector<Entrada>& _entradas, int _B) : entradas(_entradas), B(_B) {} // Constructor  
 };
 
 struct MTree {

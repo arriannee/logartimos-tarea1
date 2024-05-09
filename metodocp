@@ -1,0 +1,107 @@
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <algorithm>
+#include <functional>
+#include <cstdlib>
+
+// Definición de la estructura Punto
+struct Punto {
+    double x, y;
+    Punto(double x, double y) : x(x), y(y) {}
+};
+
+// Función para calcular la distancia euclidiana entre dos puntos.
+double distanciaEuclidiana(const Punto& p1, const Punto& p2) {
+    return sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
+}
+
+// Clase para una entrada en el nodo M-Tree
+struct Entrada {
+    Punto p;
+    double cr;  // Radio cobertor
+    struct Nodo* a;  // Nodo hijo
+    Entrada(Punto _p, double _cr, Nodo* _a) : p(_p), cr(_cr), a(_a) {}
+};
+
+// Clase para un nodo en el M-Tree
+struct Nodo {
+    std::vector<Entrada> entradas;
+    int B;  // Capacidad máxima de entradas en cada nodo
+    Nodo(int _B) : B(_B) {}
+    void agregarPunto(Punto punto) {
+        Entrada nuevaEntrada(punto, 0, nullptr);
+        entradas.push_back(nuevaEntrada);
+    }
+};
+
+// Clase para el M-Tree
+struct MTree {
+    Nodo* raiz;
+    MTree(Nodo* _raiz) : raiz(_raiz) {}
+};
+
+// Funciones para el algoritmo CP
+int obtenerAltura(MTree* tree) {
+    if (!tree || !tree->raiz) return 0;
+    int altura = 0;
+    Nodo* actual = tree->raiz;
+    while (actual && !actual->entradas.empty() && actual->entradas[0].a) {
+        altura++;
+        actual = actual->entradas[0].a->raiz;
+    }
+    return altura + 1;
+}
+
+void unirEnTsup(MTree* Tj, MTree* Tsup, Punto p) {
+    if (!Tj || !Tsup) return;
+    Nodo* nodoEnTsup = Tsup->raiz;
+    for (Entrada& e : nodoEnTsup->entradas) {
+        if (distanciaEuclidiana(e.p, p) == 0) {
+            e.a = Tj;
+            break;
+        }
+    }
+}
+
+void ajustarRadiosCobertores(MTree* T) {
+    if (!T || !T->raiz) return;
+    std::function<void(Nodo*)> ajustar = [&](Nodo* nodo) {
+        for (Entrada& e : nodo->entradas) {
+            if (e.a) {
+                ajustar(e.a->raiz);
+                double maxDist = 0;
+                for (Entrada& subE : e.a->raiz->entradas) {
+                    double dist = distanciaEuclidiana(e.p, subE.p);
+                    if (dist > maxDist) maxDist = dist;
+                }
+                e.cr = maxDist;
+            }
+        }
+    };
+    ajustar(T->raiz);
+}
+
+// Ejemplo de cómo se puede llamar a estas funciones en una función main
+int main() {
+    // Ejemplo de creación de puntos
+    std::vector<Punto> puntos = {{0.1, 0.2}, {0.4, 0.4}, {0.5, 0.5}, {0.9, 0.8}};
+
+    // Crear un nodo raíz para el M-Tree con capacidad de 10 entradas
+    Nodo* raiz = new Nodo(10);
+    MTree* arbol = new MTree(raiz);
+
+    // Agregar puntos al árbol (ejemplo simple, no utiliza todo el CP)
+    for (auto& punto : puntos) {
+        arbol->raiz->agregarPunto(punto);
+    }
+
+    // Asumir funciones adicionales para manejar la construcción completa según el método CP
+    // Esto requiere más código para manejar las selecciones y la construcción detallada
+
+    // Finalmente, limpiar recursos
+    delete arbol->raiz;  // Asegúrese de eliminar correctamente todos los nodos y subárboles
+    delete arbol;
+
+    return 0;
+}

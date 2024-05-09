@@ -24,7 +24,7 @@ struct Nodo {
     int B = 4096/sizeof(entradas);  // Capacidad máxima de entradas en cada nodo
 
     // Método para añadir un Punto dentro del nodo
-    void agregarPunto(const Punto& punto) {
+    void agregarPunto(Punto punto) {
         Entrada nuevaEntrada(punto, 0, nullptr); // Crear la nueva entrada que se añadirá
         entradas.push_back(nuevaEntrada);        // Añadir la entrada al final del vector
     }   

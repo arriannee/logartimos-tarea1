@@ -111,39 +111,48 @@ MTree* metodoCP(const vector<Punto>& P) {
     for (auto tupla : F_l) {
         MTree* Tj = metodoCP(get<0>(tupla));
 
-        // Paso 7: Verificar si la raiz del arbol Tj es de un tamaño menor a b
+        // Paso 7: Verificar si la raíz del árbol Tj es de un tamaño menor a b
         if (Tj->raiz->entradas.size() < b) {
-            std::vector<MTree*> subarboles;
+            std::vector<std::tuple<MTree*, Punto>> subarboles_tuplas;
+        
             for (auto& entrada : Tj->raiz->entradas) {
                 std::vector<Entrada> entradas_hijo;
                 if (entrada.a != nullptr) { // Si no es una hoja
                     entradas_hijo = entrada.a->entradas;
                 }
                 Nodo* nuevo_nodo = new Nodo(entradas_hijo, B);
-                subarboles.push_back(new MTree(nuevo_nodo));
+                MTree* nuevo_arbol = new MTree(nuevo_nodo);
+                subarboles_tuplas.push_back(std::make_tuple(nuevo_arbol, entrada.p)); // Almacenamos el árbol con su punto asociado
             }
-
-            delete Tj->raiz; // Eliminar la raiz actual
+        
+            delete Tj->raiz; // Eliminar la raíz actual
             Tj->raiz = nullptr;
-
-            // Reasignar los puntos de F_l[i] a los nuevos subarboles
-            for (int j = 0; j < F_l[i].size(); j++) {
-                int indiceMasCercano = 0;
-                double distanciaMin = distanciaEuclidiana(F_l[i][j], subarboles[0]->raiz->entradas[0].p);
-                for (int k = 1; k < subarboles.size(); k++) {
-                    double distanciaActual = distanciaEuclidiana(F_l[i][j], subarboles[k]->raiz->entradas[0].p);
-                    if (distanciaActual < distanciaMin) {
-                        indiceMasCercano = k;
-                        distanciaMin = distanciaActual;
+        
+            // Reasignar lo puntos a los nueos subarborles
+            for (auto& tupla : F_l) {
+                for (Punto& punto : get<0>(tupla)) {
+                    int indiceMasCercano = 0;
+                    double distanciaMin = std::numeric_limits<double>::max();
+        
+                    // aca bsuca el sub arbol ams cerca no y se lo asigna
+                    for (int k = 0; k < subarboles_tuplas.size(); k++) {
+                        double distanciaActual = distanciaEuclidiana(punto, std::get<1>(subarboles_tuplas[k]));
+                        if (distanciaActual < distanciaMin) {
+                            indiceMasCercano = k;
+                            distanciaMin = distanciaActual;
+                        }
                     }
+                    std::get<0>(subarboles_tuplas[indiceMasCercano])->raiz->agregarPunto(punto);
                 }
-                subarboles[indiceMasCercano]->raiz->agregarPunto(F_l[i][j]);
             }
-
-            // Eliminar el punto de F que fue usado como raiz en Tj, aqui tiene el indice del sample
-            F.erase(F.begin() + i); //  i es el índice del punto de F que fue raiz
+        
+            // Limpieza: Eliminar el punto de F que fue usado como raíz en Tj
+            // esta wea se la pase a chat gpt por que no sabia como elimar ese putno con las tuplas era mas faccil con el Begin(erase()+i) que tenai antes
+            F.erase(std::remove_if(F.begin(), F.end(), [&](const Punto& punto) {
+                return punto.x == get<1>(F_l[i]).x && punto.y == get<1>(F_l[i]).y;
+            }), F.end());
         }
-    }
+
 
     
 };

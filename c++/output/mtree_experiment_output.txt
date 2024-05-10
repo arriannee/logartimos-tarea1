@@ -14,3 +14,7 @@ Tiempo de construcción SS para n=8192: 1787.79 segundos
 Tiempo de consultas SS para n=8192: 0.0056611 segundos
 SS - Media de accesos para n=8192: 91.93, Desviación estándar: 5.4208, Varianza: 29.3851
 SS - Media de puntos encontrados para n=8192: 10.06, Desviación estándar: 2.85944, Varianza: 8.1764
+Tiempo de construcción SS para n=16384: 6101.99 segundos
+Tiempo de consultas SS para n=16384: 0.0032772 segundos
+SS - Media de accesos para n=16384: 55.21, Desviación estándar: 27.9633, Varianza: 781.946
+SS - Media de puntos encontrados para n=16384: 6.55, Desviación estándar: 5.91164, Varianza: 34.9475

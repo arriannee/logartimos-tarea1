@@ -246,7 +246,7 @@ std::tuple<Punto, double, Nodo*> OutputInterno(const std::vector<std::tuple<Punt
     // Paso 3: Crear las entradas para el nodo interno
     std::vector<Entrada> entradas;
     for (const auto& [g, r, a] : cmra) {
-        entradas.emplace_back(g, r, reinterpret_cast<Entrada*>(a));
+        entradas.emplace_back(g, r, reinterpret_cast<Nodo*>(a));
     }
 
     // Paso 4: Crear el nodo interno

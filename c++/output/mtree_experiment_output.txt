@@ -1,8 +1,8 @@
-Tiempo de construcción SS para n=1024: 21.0884 segundos
-Tiempo de consultas SS para n=1024: 0.0018551 segundos
-SS - Media de accesos para n=1024: 12.19, Desviación estándar: 0.820914, Varianza: 0.6739
-SS - Total de accesos para n=1024: 1219
-Tiempo de construcción SS para n=2048: 15961.1 segundos
-Tiempo de consultas SS para n=2048: 0.0039873 segundos
-SS - Media de accesos para n=2048: 25.51, Desviación estándar: 1.57159, Varianza: 2.4699
-SS - Total de accesos para n=2048: 2551
+Tiempo de construcción SS para n=1024: 1.59117 segundos
+Tiempo de consultas SS para n=1024: 0.0007535 segundos
+SS - Media de accesos para n=1024: 12.13, Desviación estándar: 1.12832, Varianza: 1.2731
+SS - Total de accesos para n=1024: 1213
+Tiempo de construcción SS para n=2048: 12.0216 segundos
+Tiempo de consultas SS para n=2048: 0.0016112 segundos
+SS - Media de accesos para n=2048: 23.86, Desviación estándar: 1.01015, Varianza: 1.0204
+SS - Total de accesos para n=2048: 2386

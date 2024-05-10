@@ -2,6 +2,9 @@
 #include <set> 
 #include <cmath>
 
+// Definir estructura Nodo previamente
+struct Nodo;
+
 // Clase para un punto
 struct Punto {
     double x;
@@ -14,9 +17,9 @@ struct Punto {
 struct Entrada {
     Punto p;
     double cr;                      // Radio covertor
-    Entrada *a;                     // Dirección en disco a la página de su hijo
+    Nodo *a;                     // Dirección en disco a la página de su hijo
 
-    Entrada(Punto _p, double _cr, Entrada *_a) : p(_p), cr(_cr), a(_a) {} // Constructor  
+    Entrada(Punto _p, double _cr, Nodo *_a) : p(_p), cr(_cr), a(_a) {} // Constructor  
 };
 
 struct Nodo  {

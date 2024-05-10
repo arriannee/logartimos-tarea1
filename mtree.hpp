@@ -50,3 +50,6 @@ int altura(Nodo* nodo);
 
 // Función recursiva para encontrar todos los subárboles de altura h
 void encontrarSubarboles(Nodo* nodo, int h, vector<Nodo*>& subarboles);
+
+// Función recursiva para actualizar los radios cobertores de las entradas de un árbol
+void actualizarCR(Nodo* n);

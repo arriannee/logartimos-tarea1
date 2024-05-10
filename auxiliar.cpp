@@ -54,3 +54,45 @@ void encontrarSubarboles(Nodo* nodo, int h, vector<Nodo*>& subarboles) {
     }
 }
 
+// Busca la distancia máxima de una entrada a alguno de sus hijos
+double calcularDistanciaMaxima(Entrada inicial) {
+    // Si no tiene un nodo hijo
+    if (inicial.a == nullptr) {
+        // Devuelve 0
+        return 0;
+    } 
+    
+    double maxDist = 0;
+    // Si tiene un nodo hijo, para cada entrada en su nodo hijo
+    for (Entrada entrada : inicial.a->entradas) {
+        // Calcula recursivamente la distancia entre la entrada de su nodo hijo con sus nodos hijos
+        double extra = calcularDistanciaMaxima(entrada);
+        // Suma la distancia total encontrada para su nodo hijo con la propia
+        double dist = distanciaEuclidiana(inicial.p, entrada.p) + extra;
+        // Se queda con la máxima distancia encontrada
+        maxDist = max(dist, maxDist);
+    }
+    // Devuelve la distancia máxima
+    return maxDist;
+}
+
+// Función que recorre todo un árbol, actualizando los radios cobertores de cada entrada
+void actualizarCR(Nodo* n) {
+    // Para cada entrada de n
+    for (Entrada entradas : n->entradas) {
+        // Si es una hoja, tiene cr = 0
+        if (entradas.a == nullptr) {
+            entradas.cr = 0;
+        }
+        // Si es un nodo interno
+        else {
+            // Se calcula su distancia máxima con cualquier punto de su subárbol
+            double nuevoCR = calcularDistanciaMaxima(entradas);
+            entradas.cr = nuevoCR;
+            // Se llama la función sobre su nodo hijo
+            actualizarCR(entradas.a);
+        }     
+    }
+}
+
+

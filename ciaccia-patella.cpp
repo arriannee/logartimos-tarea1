@@ -187,7 +187,7 @@ MTree metodoCP(const vector<Punto>& P) {
     MTree T = Tsup;
 
     // Paso 12: Se setean los radios cobertores resultantes para cada entrada en este árbol
-    //Cómo??
+    actualizarCR(T.raiz);
 
     // Paso 13: Se retorna T
     return T;

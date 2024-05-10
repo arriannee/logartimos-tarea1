@@ -1,5 +1,6 @@
 #include "mtree.hpp"
 #include <cmath>
+#include <tuple>
 
 // Función para calcular la distancia euclidiana entre dos puntos.
 double distanciaEuclidiana(Punto p1, Punto p2) {

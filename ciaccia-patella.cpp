@@ -5,7 +5,7 @@
 #include <vector>
 #include <algorithm>
 #include <tuple>
-#include <limits>
+#include <climits>
 using namespace std;
 
 // Definición de B pa que el compilador no reclame BORRAR DESPUÉS ***********************
@@ -14,14 +14,14 @@ int b = 0.5*B;
 
 
 // Método Ciaccia-Patella (CP)
-MTree* metodoCP(const vector<Punto>& P) {
+MTree metodoCP(const vector<Punto>& P) {
     int n = P.size();
     // Paso 1: Si |P| ≤ B, se crea un árbol T , se insertan todos los puntos a T y se retorna T
     if (n <= B) {
-        MTree* T;
+        MTree T;
         for (int i = 0; i < n; i++) {
             Punto punto = P[i];
-            T->raiz->agregarPunto(punto);
+            T.raiz->agregarPunto(punto);
         }
         return T;
     }
@@ -108,31 +108,34 @@ MTree* metodoCP(const vector<Punto>& P) {
     vector<MTree> Tj;
     // Paso 6: Se realiza recursivamente el algoritmo CP en cada Fj, obteniendo el arbol Tj
     for (auto tupla : F_j) {
-        MTree *arbolRecursivo = metodoCP(get<0>(tupla));
+        MTree arbolRecursivo = metodoCP(get<0>(tupla));
         // Paso 7: Si la raíz del árbol es de un tamaño menor a b
-        if (arbolRecursivo->raiz->entradas.size() < b) {
-            for (Entrada entrada : arbolRecursivo->raiz->entradas) {
+        if (arbolRecursivo.raiz->entradas.size() < b) {
+            for (Entrada entrada : arbolRecursivo.raiz->entradas) {
                 // se añaden los puntos pertinentes a F
                 F.push_back(entrada.p);
                 // se trabaja con sus subárboles como nuevos Tj , . . . , Tj+p−1
                 if (entrada.a != nullptr) {
-                    Tj.push_back(entrada.a);
+                    MTree subarbol;
+                    subarbol.raiz = entrada.a;
+                    Tj.push_back(subarbol);
                 }
             }
             // Se quita esa raíz, se elimina pfj de F 
-            arbolRecursivo->raiz = nullptr;
+            arbolRecursivo.raiz = nullptr;
             Punto pfj = get<1>(tupla);
             borrarPuntoDeVector(pfj, F);
         }
-        Tj.push_back(*arbolRecursivo);
+        Tj.push_back(arbolRecursivo);
     }
 
     // Paso 8: Se define T′ inicialmente como un conjunto vacío.
     vector<MTree> TPrima;
-    // Etapa de balanceamiento: Se define h como la altura mínima de los árboles Tj.
-    for (MTree arbol : Tj){
-        
+    // Etapa de balanceamiento: Se define h como la altura mínima de los árboles Tj
+    int h = INT_MAX;
+    for (MTree arbol : Tj) {
+        h = min(h, altura(arbol.raiz));
     }
 
-    
+    // Paso 9: 
 };

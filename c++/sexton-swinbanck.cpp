@@ -311,7 +311,7 @@ Nodo* SS(const std::vector<Punto> &Cin, int b, int B) {
 }
 
 // Función para realizar las consultas
-std::pair<int, int> realizarConsulta(const MTree& tree, Punto q, double radio) {
+std::pair<int, int> query(const MTree& tree, Punto q, double radio) {
     int accesos = 0; // Contador de accesos
     int puntosEncontrados = 0; // Contador de puntos encontrados
     if (tree.raiz == nullptr) return {accesos, puntosEncontrados};
@@ -395,7 +395,7 @@ int main() {
         std::vector<int> puntosEncontradosSS;
         auto startConsulta = std::chrono::high_resolution_clock::now();
         for (const auto& q : Q) {
-            auto [accesos, puntosEncontrados] = realizarConsulta(treeSS, q, radioConsulta);
+            auto [accesos, puntosEncontrados] = query(treeSS, q, radioConsulta);
             accesosSS.push_back(accesos);
             puntosEncontradosSS.push_back(puntosEncontrados);
         }

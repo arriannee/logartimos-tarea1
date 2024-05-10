@@ -3,6 +3,7 @@
 #include <vector>
 #include <tuple>
 #include <iostream>
+#include <cmath>
 #include "mtree.hpp"
 
 // Recibe un Punto p y un vector de Punto V, si p está efectivamente en V, lo elimina
@@ -23,4 +24,8 @@ int altura(Nodo* nodo){
     }
     
     return alturaMax + 1;
+}
+
+double distanciaEuclidiana(Punto p1, Punto p2) {
+    return sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
 }

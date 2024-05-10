@@ -1,5 +1,3 @@
-#include "mtree.hpp"
-#include "mtree.cpp"
 #include "auxiliar.cpp"
 #include <cstdlib>
 #include <vector>
@@ -137,5 +135,31 @@ MTree metodoCP(const vector<Punto>& P) {
         h = min(h, altura(arbol.raiz));
     }
 
-    // Paso 9: 
+    // Paso 9: Por cada Tj , si su altura es igual a h, se añade a T′
+    for (MTree arbol : Tj) {
+        if (altura(arbol.raiz) == h) {
+            TPrima.push_back(arbol);
+        }
+        // Si no se cumple
+        else {
+            // PENDIENTEEEEEEEEEEEEEEEEEE
+        }
+    }
+
+    // Paso 10: Se define Tsup como el resultado de la llamada al algoritmo CP aplicado a F
+    MTree Tsup = metodoCP(F);
+
+    // Paso 11: Se une cada Tj ∈ T′ a su hoja en Tsup correspondiente al punto pfj ∈ F, obteniendo un nuevo árbol T
+    MTree T;
+
+    // Paso 12: Se setean los radios cobertores resultantes para cada entrada en este árbol
+    for (Entrada entrada : T.raiz->entradas) {
+        entrada.cr = 0;
+        for (Entrada entradaSubarbol : entrada.a->entradas) {
+            // Aquí pondría mi código si tuviera uno
+        }
+    }
+
+    // Paso 13: Se retorna T
+    return T;
 };

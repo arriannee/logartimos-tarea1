@@ -311,26 +311,28 @@ Nodo* SS(const std::vector<Punto> &Cin, int b, int B) {
 }
 
 // Función para realizar las consultas
-int realizarConsulta(Nodo* root, Punto q, double radio, int& contadorAccesos) {
-    int accesos = 0;
-    if (root == nullptr) return accesos;
+std::pair<int, int> realizarConsulta(const MTree& tree, Punto q, double radio) {
+    int accesos = 0; // Contador de accesos
+    int puntosEncontrados = 0; // Contador de puntos encontrados
+    if (tree.raiz == nullptr) return {accesos, puntosEncontrados};
 
-    std::vector<Nodo*> nodosPorVerificar = {root};
-    while (!nodosPorVerificar.empty()) {
+    std::vector<Nodo*> nodosPorVerificar = {tree.raiz};
+    while (!nodosPorVerificar.empty()) { // Mientras hayan Nodos por verificar
         Nodo* nodo = nodosPorVerificar.back();
         nodosPorVerificar.pop_back();
         ++accesos;
-        ++contadorAccesos;  // Incrementar el contador de accesos
 
-        for (const auto& entrada : nodo->entradas) {
+        for (const auto& entrada : nodo->entradas) { // Realizar consulta con el radio y el punto
             if (distanciaEuclidiana(q, entrada.p) <= radio + entrada.cr) {
                 if (entrada.a != nullptr) {
                     nodosPorVerificar.push_back(reinterpret_cast<Nodo*>(entrada.a));
+                } else {
+                    ++puntosEncontrados;
                 }
             }
         }
     }
-    return accesos;
+    return {accesos, puntosEncontrados};
 }
 
 void printTree(Nodo* nodo, int nivel = 0, int hijo = 0) {
@@ -380,35 +382,47 @@ int main() {
 
         // Construir el árbol con SS
         auto startSS = std::chrono::high_resolution_clock::now();
-        Nodo* rootSS = SS(P, b, B);
+        Nodo* rootSS = SS(P, b, B); // Obtengo el Nodo raíz
+        MTree treeSS(rootSS); // Creo su árbol con esta raíz
         auto endSS = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> tiempoConstruccionSS = endSS - startSS;
         outfile << "Tiempo de construcción SS para n=" << n << ": " << tiempoConstruccionSS.count() << " segundos" << std::endl;
 
         // Evaluar consultas
         std::vector<int> accesosSS;
-        int contadorAccesosSS = 0;
+        std::vector<int> puntosEncontradosSS;
         auto startConsulta = std::chrono::high_resolution_clock::now();
         for (const auto& q : Q) {
-            int accesos = realizarConsulta(rootSS, q, radioConsulta, contadorAccesosSS);
+            auto [accesos, puntosEncontrados] = realizarConsulta(treeSS, q, radioConsulta);
             accesosSS.push_back(accesos);
+            puntosEncontradosSS.push_back(puntosEncontrados);
         }
         auto endConsulta = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> tiempoConsultaSS = endConsulta - startConsulta;
         outfile << "Tiempo de consultas SS para n=" << n << ": " << tiempoConsultaSS.count() << " segundos" << std::endl;
 
-        // Calcular estadísticas para SS
+        // Calcular estadísticas para SS:
+        // Accesos
         double mediaSS = std::accumulate(accesosSS.begin(), accesosSS.end(), 0.0) / accesosSS.size();
         double varianzaSS = std::accumulate(accesosSS.begin(), accesosSS.end(), 0.0, [mediaSS](double sum, int x) {
             return sum + (x - mediaSS) * (x - mediaSS);
         }) / accesosSS.size();
         double desviacionEstandarSS = std::sqrt(varianzaSS);
 
+        // Puntos
+        double mediaPuntosEncontradosSS = std::accumulate(puntosEncontradosSS.begin(), puntosEncontradosSS.end(), 0.0) / puntosEncontradosSS.size();
+        double varianzaPuntosEncontradosSS = std::accumulate(puntosEncontradosSS.begin(), puntosEncontradosSS.end(), 0.0, [mediaPuntosEncontradosSS](double sum, int x) {
+            return sum + (x - mediaPuntosEncontradosSS) * (x - mediaPuntosEncontradosSS);
+        }) / puntosEncontradosSS.size();
+        double desviacionEstandarPuntosEncontradosSS = std::sqrt(varianzaPuntosEncontradosSS);
+
         outfile << "SS - Media de accesos para n=" << n << ": " << mediaSS 
                 << ", Desviación estándar: " << desviacionEstandarSS 
                 << ", Varianza: " << varianzaSS << std::endl;
-        outfile << "SS - Total de accesos para n=" << n << ": " << contadorAccesosSS << std::endl;
-
+        outfile << "SS - Media de puntos encontrados para n=" << n << ": " << mediaPuntosEncontradosSS 
+                << ", Desviación estándar: " << desviacionEstandarPuntosEncontradosSS 
+                << ", Varianza: " << varianzaPuntosEncontradosSS << std::endl;
+        
         // Imprimir el árbol
         printTree(rootSS);
 

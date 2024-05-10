@@ -33,8 +33,7 @@ int altura(Nodo* nodo){
     // Se cuenta el nodo actual
     return alturaMax + 1;
 }
-
- // Función recursiva para encontrar todos los subárboles de altura h
+ // Recibe una raíz de un árbol y busca exhaustivamente todos sus subárboles de altura h, guardándolos en un vector
 void encontrarSubarboles(Nodo* nodo, int h, vector<Nodo*>& subarboles) {
     // Si el nodo es nulo o la altura es menor a h, ningún subarbol puede tener altura igual a h, retornar
     if (nodo == nullptr || altura(nodo) < h) {

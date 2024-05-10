@@ -47,3 +47,6 @@ void borrarPuntoDeVector(Punto p, vector<Punto> V);
 
 // Función para calcular la altura de un MTree.
 int altura(Nodo* nodo);
+
+// Función recursiva para encontrar todos los subárboles de altura h
+void encontrarSubarboles(Nodo* nodo, int h, vector<Nodo*>& subarboles);

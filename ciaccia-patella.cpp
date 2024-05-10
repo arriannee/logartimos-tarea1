@@ -153,43 +153,31 @@ MTree metodoCP(const vector<Punto>& P) {
             borrarPuntoDeVector(puntoABuscar, F);
 
             // Paso 9.2: Se hace una búsqueda exhaustiva en Tj de todos los subárboles T′1 , . . . , T′p de altura igual a h
-            for (Entrada entrada : arbolTj.raiz->entradas) {
-                // Si su altura es igual a h
-                if (altura(entrada.a) == h) {
-                    MTree TPrimaP(entrada.a);
-                    // Se insertan estos árboles a T'
-                    TPrima.push_back(TPrimaP);
-
-                    // Paso 9.3: Se insertan los puntos raíz de T′1 , . . . , T′p , pf1', . . . , pfp' en F
-
-                }
-                // Si su altura no es igual a h
-                else if (altura(entrada.a) < h) {
-                    // No hace nada?
+            vector<Nodo*> busqueda; // En este vector se almacenarán todos los subarboles de altura h
+            encontrarSubarboles(arbolTj.raiz, h, busqueda);
+            // Se insertan estos árboles a T'
+            for (Nodo* nodo : busqueda){
+                MTree TPrima_i(nodo); // Se crean los árboles T′1 , . . . , T′p (T'_i)
+                TPrima.push_back(TPrima_i);
+                // Paso 9.3: Se insertan los puntos raíz de T′1 , . . . , T′p , pf1', . . . , pfp' en F
+                for (Entrada entrada : TPrima_i.raiz->entradas) {
+                    // entrada.p son los puntos raíz de T'i
+                    F.push_back(entrada.p);
                 }
             }
-
         }
 
-            // 
-
-            // Se insertan los puntos raíz de T′1 , . . . , T′p , pf1', . . . , pfp' en F
-
-
     }
+
     // Paso 10: Se define Tsup como el resultado de la llamada al algoritmo CP aplicado a F
     MTree Tsup = metodoCP(F);
 
     // Paso 11: Se une cada Tj ∈ T′ a su hoja en Tsup correspondiente al punto pfj ∈ F, obteniendo un nuevo árbol T
-    //MTree T;
+    for (MTree arbolTj : TPrima) {
+        
+    }
 
     // Paso 12: Se setean los radios cobertores resultantes para cada entrada en este árbol
-    for (Entrada entrada : T.raiz->entradas) {
-        entrada.cr = 0;
-        for (Entrada entradaSubarbol : entrada.a->entradas) {
-            // Aquí pondría mi código si tuviera uno
-        }
-    }
 
     // Paso 13: Se retorna T
     //return T;

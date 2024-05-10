@@ -172,13 +172,23 @@ MTree metodoCP(const vector<Punto>& P) {
     // Paso 10: Se define Tsup como el resultado de la llamada al algoritmo CP aplicado a F
     MTree Tsup = metodoCP(F);
 
-    // Paso 11: Se une cada Tj ∈ T′ a su hoja en Tsup correspondiente al punto pfj ∈ F, obteniendo un nuevo árbol T
-    for (MTree arbolTj : TPrima) {
-        
+    // Paso 11: Se une cada Tj ∈ T′ a su hoja en Tsup correspondiente al punto pfj ∈ F
+    for (Entrada entradaTsup : Tsup.raiz->entradas) {   // Para cada entrada de Tsup
+        for (tuple<MTree, Punto> tuplaTj : Tj) {        // Para cada Tj
+            // El punto de la entrada es igual al pfj asignado a Tj, es su hoja correspondiente en Tsup
+            if (entradaTsup.p.x == get<1>(tuplaTj).x && entradaTsup.p.y == get<1>(tuplaTj).y) {
+                Nodo* raizTj = get<0>(tuplaTj).raiz;
+                // La entrada apunta a la raíz de Tj (se unen)
+                entradaTsup.a = raizTj;
+            }
+        }
     }
+    // obteniendo un nuevo árbol T
+    MTree T = Tsup;
 
     // Paso 12: Se setean los radios cobertores resultantes para cada entrada en este árbol
+    //Cómo??
 
     // Paso 13: Se retorna T
-    //return T;
+    return T;
 };

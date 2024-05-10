@@ -335,6 +335,7 @@ std::pair<int, int> realizarConsulta(const MTree& tree, Punto q, double radio) {
     return {accesos, puntosEncontrados};
 }
 
+/*
 void printTree(Nodo* nodo, int nivel = 0, int hijo = 0) {
     if (nodo == nullptr) return;
 
@@ -354,6 +355,7 @@ void printTree(Nodo* nodo, int nivel = 0, int hijo = 0) {
         }
     }
 }
+*/
 
 // Experimento para n = 2^10, 2^11, ..., 2^25
 int main() {
@@ -424,7 +426,7 @@ int main() {
                 << ", Varianza: " << varianzaPuntosEncontradosSS << std::endl;
         
         // Imprimir el árbol
-        printTree(rootSS);
+        // printTree(rootSS);
 
         // Limpiar
         delete rootSS;

@@ -10,3 +10,7 @@ Tiempo de construcción SS para n=4096: 83.8994 segundos
 Tiempo de consultas SS para n=4096: 0.002883 segundos
 SS - Media de accesos para n=4096: 49.28, Desviación estándar: 3.37959, Varianza: 11.4216
 SS - Media de puntos encontrados para n=4096: 4.76, Desviación estándar: 2.2366, Varianza: 5.0024
+Tiempo de construcción SS para n=8192: 1787.79 segundos
+Tiempo de consultas SS para n=8192: 0.0056611 segundos
+SS - Media de accesos para n=8192: 91.93, Desviación estándar: 5.4208, Varianza: 29.3851
+SS - Media de puntos encontrados para n=8192: 10.06, Desviación estándar: 2.85944, Varianza: 8.1764

@@ -13,10 +13,10 @@ struct Punto {
 // Clase para una entrada
 struct Entrada {
     Punto p;
-    double cr;                      // Radio covertor
-    Entrada *a;                     // Dirección en disco a la página de su hijo
+    double cr;                   // Radio covertor
+    struct Nodo *a;                     // Dirección en disco a la página de su hijo
 
-    Entrada(Punto _p, double _cr, Entrada *_a) : p(_p), cr(_cr), a(_a) {} // Constructor  
+    Entrada(Punto _p, double _cr, Nodo *_a) : p(_p), cr(_cr), a(_a) {} // Constructor  
 };
 
 struct Nodo {
@@ -35,7 +35,7 @@ struct Nodo {
 struct MTree {
     Nodo *raiz;
 
-    MTree(Nodo *_raiz) : raiz(_raiz) {} // Constructor  
+    //MTree(Nodo *_raiz) : raiz(_raiz) {} // Constructor  
 };
 
 // Función para calcular la distancia euclidiana entre dos puntos.

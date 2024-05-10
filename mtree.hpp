@@ -1,4 +1,6 @@
 #include <vector>
+#include <string>
+#include <iostream>
 using namespace std;
 
 // Clase para un punto
@@ -45,8 +47,3 @@ void borrarPuntoDeVector(Punto p, vector<Punto> V);
 
 // Función para calcular la altura de un MTree.
 int altura(Nodo* nodo);
-
-int main() {
-    printf("hola");
-    return 0;
-}

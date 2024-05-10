@@ -1,5 +1,4 @@
 #include <vector>
-#include <set> 
 using namespace std;
 
 // Clase para un punto
@@ -14,13 +13,13 @@ struct Punto {
 struct Entrada {
     Punto p;
     double cr;                   // Radio covertor
-    struct Nodo *a;                     // Dirección en disco a la página de su hijo
+    struct Nodo *a;              // Dirección en disco a la página de su hijo
 
     Entrada(Punto _p, double _cr, Nodo *_a) : p(_p), cr(_cr), a(_a) {} // Constructor  
 };
 
 struct Nodo {
-    vector<Entrada> entradas;  // Conjunto de entradas
+    vector<Entrada> entradas;       // Conjunto de entradas
     int B = 4096/sizeof(entradas);  // Capacidad máxima de entradas en cada nodo
 
     // Método para añadir un Punto dentro del nodo
@@ -29,14 +28,25 @@ struct Nodo {
         entradas.push_back(nuevaEntrada);        // Añadir la entrada al final del vector
     }   
 
-    Nodo(vector<Entrada>& _entradas, int _B) : entradas(_entradas), B(_B) {} // Constructor  
+    Nodo(vector<Entrada>& _entradas, int _B) : entradas(_entradas), B(_B) {} // Constructor
 };
 
 struct MTree {
     Nodo *raiz;
 
-    //MTree(Nodo *_raiz) : raiz(_raiz) {} // Constructor  
+    MTree(Nodo *_raiz) : raiz(_raiz) {} // Constructor  
 };
 
 // Función para calcular la distancia euclidiana entre dos puntos.
 double distanciaEuclidiana(Punto p1, Punto p2);
+
+// Función para borrar un punto de un vector.
+void borrarPuntoDeVector(Punto p, vector<Punto> V);
+
+// Función para calcular la altura de un MTree.
+int altura(Nodo* nodo);
+
+int main() {
+    printf("hola");
+    return 0;
+}

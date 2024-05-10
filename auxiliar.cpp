@@ -1,10 +1,13 @@
 #include <limits>
 #include <algorithm>
-#include <vector>
-#include <tuple>
 #include <iostream>
 #include <cmath>
 #include "mtree.hpp"
+
+// Calcula la distancia entre dos puntos p1 y p2
+double distanciaEuclidiana(Punto p1, Punto p2) {
+    return sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
+}
 
 // Recibe un Punto p y un vector de Punto V, si p está efectivamente en V, lo elimina
 void borrarPuntoDeVector(Punto p, vector<Punto> V) {
@@ -26,6 +29,4 @@ int altura(Nodo* nodo){
     return alturaMax + 1;
 }
 
-double distanciaEuclidiana(Punto p1, Punto p2) {
-    return sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
-}
+

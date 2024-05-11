@@ -18,3 +18,7 @@ Tiempo de construcción SS para n=16384: 6101.99 segundos
 Tiempo de consultas SS para n=16384: 0.0032772 segundos
 SS - Media de accesos para n=16384: 55.21, Desviación estándar: 27.9633, Varianza: 781.946
 SS - Media de puntos encontrados para n=16384: 6.55, Desviación estándar: 5.91164, Varianza: 34.9475
+Tiempo de construcción SS para n=32768: 40792.5 segundos
+Tiempo de consultas SS para n=32768: 0.0185333 segundos
+SS - Media de accesos para n=32768: 310.35, Desviación estándar: 51.7645, Varianza: 2679.57
+SS - Media de puntos encontrados para n=32768: 32.89, Desviación estándar: 9.118, Varianza: 83.1379

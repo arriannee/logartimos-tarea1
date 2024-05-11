@@ -176,15 +176,18 @@ MTree metodoCP(const vector<Punto>& P) {
 
             // Paso 9.2: Se hace una búsqueda exhaustiva en Tj de todos los subárboles T′1 , . . . , T′p de altura igual a h
             vector<Nodo*> busqueda; // En este vector se almacenarán todos los subarboles de altura h
-            encontrarSubarboles(arbolTj.raiz, h, busqueda);
+            vector<Entrada> raices;
+            for (Entrada entrada : arbolTj.raiz->entradas) {
+                encontrarSubarboles(entrada, h, busqueda, raices);
+            }
             // Se insertan estos árboles a T'
             for (Nodo* nodo : busqueda){
                 MTree TPrima_i(nodo); // Se crean los árboles T′1 , . . . , T′p (T'_i)
                 TPrima.push_back(TPrima_i);
                 // Paso 9.3: Se insertan los puntos raíz de T′1 , . . . , T′p , pf1', . . . , pfp' en F
-                for (Entrada entrada : TPrima_i.raiz->entradas) {
+                for (Entrada raiz : raices) {
                     // entrada.p son los puntos raíz de T'i
-                    F.push_back(entrada.p);
+                    F.push_back(raiz.p);
                 }
             }
         }

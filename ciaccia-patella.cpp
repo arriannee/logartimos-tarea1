@@ -162,6 +162,7 @@ MTree metodoCP(const vector<Punto>& P) {
     }
 
     vector<MTree> Borrar; // Los Tj asociados a pfj que se deben eliminar 
+    
     // Paso 9: Por cada Tj , si su altura es igual a h, se añade a T′
     for (tuple<MTree, Punto> tupla : Tj) {
         MTree arbolTj = get<0>(tupla);
@@ -176,7 +177,7 @@ MTree metodoCP(const vector<Punto>& P) {
 
             // Paso 9.2: Se hace una búsqueda exhaustiva en Tj de todos los subárboles T′1 , . . . , T′p de altura igual a h
             vector<Nodo*> busqueda; // En este vector se almacenarán todos los subarboles de altura h
-            vector<Entrada> raices;
+            vector<Entrada> raices; // En este vector se alacenarán los nodos raíces de dichos subárboles
             for (Entrada entrada : arbolTj.raiz->entradas) {
                 encontrarSubarboles(entrada, h, busqueda, raices);
             }
@@ -184,11 +185,11 @@ MTree metodoCP(const vector<Punto>& P) {
             for (Nodo* nodo : busqueda){
                 MTree TPrima_i(nodo); // Se crean los árboles T′1 , . . . , T′p (T'_i)
                 TPrima.push_back(TPrima_i);
-                // Paso 9.3: Se insertan los puntos raíz de T′1 , . . . , T′p , pf1', . . . , pfp' en F
-                for (Entrada raiz : raices) {
-                    // entrada.p son los puntos raíz de T'i
-                    F.push_back(raiz.p);
-                }
+            // Paso 9.3: Se insertan los puntos raíz de T′1 , . . . , T′p , pf1', . . . , pfp' en F
+            for (Entrada raiz : raices) {
+                // entrada.p son los puntos raíz de T'i
+                F.push_back(raiz.p);
+            }
             }
         }
 

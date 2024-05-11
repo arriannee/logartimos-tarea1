@@ -3,7 +3,7 @@
 #include <iostream>
 #include <cmath>
 #include "mtree.hpp"
-
+/*
 // Calcula la distancia entre dos puntos p1 y p2
 double distanciaEuclidiana(Punto p1, Punto p2) {
     return sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
@@ -94,5 +94,5 @@ void actualizarCR(Nodo* n) {
         }     
     }
 }
-
+*/
 

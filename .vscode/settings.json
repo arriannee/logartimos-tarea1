@@ -43,7 +43,8 @@
         "streambuf": "cpp",
         "cstring": "cpp",
         "optional": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "chrono": "cpp"
     },
     "C_Cpp.errorSquiggles": "enabled"
 }

@@ -1,9 +1,15 @@
 #include "mtree.hpp"
 #include <cstdlib>
-#include <algorithm>
 #include <tuple>
 #include <climits>
-#include <vector>
+#include <cstdio>
+#include <cstring>
+#include <memory>
+#include <random>
+#include <chrono>
+#include <numeric>
+#include <fstream>
+#include <fstream>
 using namespace std;
 
 // Definición de B pa que el compilador no reclame BORRAR DESPUÉS ***********************
@@ -192,3 +198,132 @@ MTree metodoCP(const vector<Punto>& P) {
     // Paso 13: Se retorna T
     return T;
 };
+
+
+// Función para realizar las consultas
+pair<int, int> query(const MTree& tree, Punto q, double radio) {
+    int accesos = 0; // Contador de accesos
+    int puntosEncontrados = 0; // Contador de puntos encontrados
+    if (tree.raiz == nullptr) return {accesos, puntosEncontrados};
+
+    vector<Nodo*> nodosPorVerificar = {tree.raiz};
+    while (!nodosPorVerificar.empty()) { // Mientras hayan Nodos por verificar
+        Nodo* nodo = nodosPorVerificar.back();
+        nodosPorVerificar.pop_back();
+        ++accesos;
+
+        for (const auto& entrada : nodo->entradas) { // Realizar consulta con el radio y el punto
+            if (distanciaEuclidiana(q, entrada.p) <= radio + entrada.cr) {
+                if (entrada.a != nullptr) {
+                    nodosPorVerificar.push_back(reinterpret_cast<Nodo*>(entrada.a));
+                } else {
+                    ++puntosEncontrados;
+                }
+            }
+        }
+    }
+    return {accesos, puntosEncontrados};
+}
+
+/*
+void printTree(Nodo* nodo, int nivel = 0, int hijo = 0) {
+    if (nodo == nullptr) return;
+
+    std::string indent(nivel * 2, ' ');
+
+    if (nivel == 0) {
+        std::cout << "Entries Root Node:\n";
+    } else {
+        std::cout << indent << "Entries son " << hijo << " Node:\n";
+    }
+
+    for (int i = 0; i < nodo->entradas.size(); ++i) {
+        const auto& entrada = nodo->entradas[i];
+        std::cout << indent << "  (" << entrada.p.x << ", " << entrada.p.y << ")\n";
+        if (entrada.a != nullptr) {
+            printTree(reinterpret_cast<Nodo*>(entrada.a), nivel + 1, i);
+        }
+    }
+}
+*/
+
+// Experimento para n = 2^10, 2^11, ..., 2^25
+int main() {
+    ofstream outfile("mtree_experiment_output.txt");
+
+    int B = 4096 / sizeof(Entrada); // Calcular el tamaño máximo del bloque
+    int b = B / 2; // Calcular el tamaño mínimo del bloque
+
+    vector<int> n_values;
+    for (int i = 10; i <= 25; ++i) {
+        n_values.push_back(1 << i);
+    }
+
+    double radioConsulta = 0.02;
+    mt19937 gen(random_device{}());
+    uniform_real_distribution<double> distribucion(0.0, 1.0);
+    
+    for (int n : n_values) {
+        vector<Punto> P, Q;
+        for (int i = 0; i < n; ++i) {
+            P.push_back({distribucion(gen), distribucion(gen)});
+        }
+        for (int i = 0; i < 100; ++i) {
+            Q.push_back({distribucion(gen), distribucion(gen)});
+        }
+
+        // Construir el árbol con CP
+        auto startCP = chrono::high_resolution_clock::now();
+        // Nodo* rootCP = metodoCP(P); // Obtengo el Nodo raíz
+        MTree treeCP = metodoCP(P); // Creo su árbol con esta raíz
+        auto endCP = chrono::high_resolution_clock::now();
+        chrono::duration<double> tiempoConstruccionCP = endCP - startCP;
+        outfile << "Tiempo de construcción CP para n=" << n << ": " << tiempoConstruccionCP.count() << " segundos" << endl;
+
+        // Evaluar consultas
+        vector<int> accesosCP;
+        vector<int> puntosEncontradosCP;
+        auto startConsulta = chrono::high_resolution_clock::now();
+        for (const auto& q : Q) {
+            auto resultados = query(treeCP, q, radioConsulta);
+            int accesos = resultados.first;
+            int puntosEncontrados = resultados.second;
+            accesosCP.push_back(accesos);
+            puntosEncontradosCP.push_back(puntosEncontrados);
+        }
+        auto endConsulta = chrono::high_resolution_clock::now();
+        chrono::duration<double> tiempoConsultaCP = endConsulta - startConsulta;
+        outfile << "Tiempo de consultas CP para n=" << n << ": " << tiempoConsultaCP.count() << " segundos" << endl;
+
+        // Calcular estadísticas para CP:
+        // Accesos
+        double mediaCP = accumulate(accesosCP.begin(), accesosCP.end(), 0.0) / accesosCP.size();
+        double varianzaCP = accumulate(accesosCP.begin(), accesosCP.end(), 0.0, [mediaCP](double sum, int x) {
+            return sum + (x - mediaCP) * (x - mediaCP);
+        }) / accesosCP.size();
+        double desviacionEstandarCP = sqrt(varianzaCP);
+
+        // Puntos
+        double mediapuntosEncontradosCP = accumulate(puntosEncontradosCP.begin(), puntosEncontradosCP.end(), 0.0) / puntosEncontradosCP.size();
+        double varianzapuntosEncontradosCP = accumulate(puntosEncontradosCP.begin(), puntosEncontradosCP.end(), 0.0, [mediapuntosEncontradosCP](double sum, int x) {
+            return sum + (x - mediapuntosEncontradosCP) * (x - mediapuntosEncontradosCP);
+        }) / puntosEncontradosCP.size();
+        double desviacionEstandarpuntosEncontradosCP = sqrt(varianzapuntosEncontradosCP);
+
+        outfile << "CP - Media de accesos para n=" << n << ": " << mediaCP 
+                << ", Desviación estándar: " << desviacionEstandarCP 
+                << ", Varianza: " << varianzaCP << endl;
+        outfile << "CP - Media de puntos encontrados para n=" << n << ": " << mediapuntosEncontradosCP 
+                << ", Desviación estándar: " << desviacionEstandarpuntosEncontradosCP 
+                << ", Varianza: " << varianzapuntosEncontradosCP << endl;
+        
+        // Imprimir el árbol
+        // printTree(rootCP);
+
+        // Limpiar
+        // delete treeCP;
+    }
+
+    outfile.close();
+    return 0;
+}   

@@ -4,6 +4,21 @@
 #include <tuple>
 #include <climits>
 #include <vector>
+
+#include <cstdio>
+#include <iostream>
+#include <cstdlib>
+#include <cmath>
+#include <cstring>
+#include <memory>
+#include <vector>
+#include <tuple>
+#include <random>
+#include <chrono>
+#include <algorithm>
+#include <numeric>
+#include <cmath>
+#include <fstream>
 using namespace std;
 
 // Definición de B pa que el compilador no reclame BORRAR DESPUÉS ***********************
@@ -21,9 +36,11 @@ MTree metodoCP(const vector<Punto>& P) {
             Entrada entrada(P[i], 0, nullptr);
             entradas.push_back(entrada);
         }
-        Nodo nodo(entradas, 4096/sizeof(nodo));
-        Nodo* raiz = &nodo;
-        MTree T(raiz);
+        Nodo* raiz = new Nodo(entradas, 4096/sizeof(Entrada));
+        for (const auto& punto : P) {
+            raiz->agregarPunto(punto);
+        }
+        return MTree(raiz);
     }
 
     // Creamos el vector F
@@ -33,8 +50,10 @@ MTree metodoCP(const vector<Punto>& P) {
     vector<tuple<vector<Punto>, Punto>> F_j;
 
     do {
+        vector<Punto> F;
+        vector<tuple<vector<Punto>, Punto>> F_j;
         // Paso 2: De manera aleatoria se eligen k = min(B, n/B) puntos de P, que los llamaremos samples pf1, ..., pfk. Se insertan en un conjunto F de samples
-        int k = min(B, n/B);  // Número de samples
+        int k = int(ceil(min(double(B), double(n)/B)));  // Número de samples
         
 
         for (int i = 0; i < k; i++) {
@@ -57,7 +76,7 @@ MTree metodoCP(const vector<Punto>& P) {
             int menorDistancia = distanciaEuclidiana(puntoP, *F.begin());
             Punto puntoMasCercano = *F.begin();
             // Ahora revisamos el resto de F
-            for (Punto puntoF : F) {
+            for (Punto &puntoF : F) {
                 int dist = distanciaEuclidiana(puntoP, puntoF);
                 if (dist < menorDistancia) {
                     menorDistancia = dist;
@@ -65,7 +84,7 @@ MTree metodoCP(const vector<Punto>& P) {
                 }
             }
             // Buscamos el pfi donde debemos insertar el puntoP
-            for (auto tupla : F_j){
+            for (auto &tupla : F_j){
                 if (get<1>(tupla).x == puntoMasCercano.x && get<1>(tupla).y == puntoMasCercano.y){
                     get<0>(tupla).push_back(puntoP);
                     break;
@@ -75,14 +94,14 @@ MTree metodoCP(const vector<Punto>& P) {
 
         // Paso 4: Etapa de redistribución: Si algún Fj es tal que |Fj |< b:
         // Paso 4.1 Quitamos pfj de F
-        for (auto tupla : F_j){
+        for (auto &tupla : F_j){
             if (get<0>(tupla).size() < b) {
                 Punto puntoABuscar = get<1>(tupla);
                 borrarPuntoDeVector(puntoABuscar, F);
             }
             // Paso 4.2 Por cada p ∈ Fj , le buscamos el sample pfl más cercano de F y lo añadimos a su conjunto F_j
             // Esto es, en esencia, repetir el paso 3
-            for (Punto puntoFj : get<0>(tupla)) {
+            for (Punto &puntoFj : get<0>(tupla)) {
                 // Para comenzar decimos que el más cercano es el primero en F
                 int menorDistancia = distanciaEuclidiana(puntoFj, *F.begin());
                 Punto puntoMasCercano = *F.begin();
@@ -95,7 +114,7 @@ MTree metodoCP(const vector<Punto>& P) {
                     }
                 }
                 // Buscamos el pfi donde debemos insertar el puntoP
-                for (auto tupla : F_j){
+                for (auto &tupla : F_j){
                     if (get<1>(tupla).x == puntoMasCercano.x && get<1>(tupla).y == puntoMasCercano.y){
                         get<0>(tupla).push_back(puntoFj);
                         break;
@@ -104,10 +123,11 @@ MTree metodoCP(const vector<Punto>& P) {
             }
         }    
     } while (F.size() == 1); // Paso 5: Si |F|= 1, volver al paso 2.
+     
 
     vector<tuple<MTree, Punto>> Tj;
     // Paso 6: Se realiza recursivamente el algoritmo CP en cada Fj, obteniendo el arbol Tj
-    for (auto tupla : F_j) {
+    for (auto &tupla : F_j) {
         MTree arbolRecursivo = metodoCP(get<0>(tupla));
         // Paso 7: Si la raíz del árbol es de un tamaño menor a b
         if (arbolRecursivo.raiz->entradas.size() < b) {
@@ -125,10 +145,11 @@ MTree metodoCP(const vector<Punto>& P) {
             arbolRecursivo.raiz = nullptr;
             Punto pfj = get<1>(tupla);
             borrarPuntoDeVector(pfj, F);
-        }
-        // Tupla, en la posición 0 se guarda el árbol Tj y en la posición 1 el pfj asociado
-        tuple<MTree, Punto> tuplaTj(arbolRecursivo, get<1>(tupla));
-        Tj.push_back(tuplaTj);
+        } else {
+            // Tupla, en la posición 0 se guarda el árbol Tj y en la posición 1 el pfj asociado
+            tuple<MTree, Punto> tuplaTj(arbolRecursivo, get<1>(tupla));
+            Tj.push_back(tuplaTj);
+        }       
     }
 
     // Paso 8: Se define T′ inicialmente como un conjunto vacío.
@@ -192,3 +213,132 @@ MTree metodoCP(const vector<Punto>& P) {
     // Paso 13: Se retorna T
     return T;
 };
+
+// Función para realizar las consultas
+std::pair<int, int> query(const MTree& tree, Punto q, double radio) {
+    int accesos = 0; // Contador de accesos
+    int puntosEncontrados = 0; // Contador de puntos encontrados
+    if (tree.raiz == nullptr) return {accesos, puntosEncontrados};
+
+    std::vector<Nodo*> nodosPorVerificar = {tree.raiz};
+    while (!nodosPorVerificar.empty()) { // Mientras hayan Nodos por verificar
+        Nodo* nodo = nodosPorVerificar.back();
+        nodosPorVerificar.pop_back();
+        ++accesos;
+
+        for (const auto& entrada : nodo->entradas) { // Realizar consulta con el radio y el punto
+            if (distanciaEuclidiana(q, entrada.p) <= radio + entrada.cr) {
+                if (entrada.a != nullptr) {
+                    nodosPorVerificar.push_back(reinterpret_cast<Nodo*>(entrada.a));
+                } else {
+                    ++puntosEncontrados;
+                }
+            }
+        }
+    }
+    return {accesos, puntosEncontrados};
+}
+
+
+void printTree(Nodo* nodo, int nivel = 0, int hijo = 0) {
+    if (nodo == nullptr) return;
+
+    std::string indent(nivel * 2, ' ');
+
+    if (nivel == 0) {
+        std::cout << "Entries Root Node:\n";
+    } else {
+        std::cout << indent << "Entries son " << hijo << " Node:\n";
+    }
+
+    for (int i = 0; i < nodo->entradas.size(); ++i) {
+        const auto& entrada = nodo->entradas[i];
+        std::cout << indent << "  (" << entrada.p.x << ", " << entrada.p.y << ")\n";
+        if (entrada.a != nullptr) {
+            printTree(reinterpret_cast<Nodo*>(entrada.a), nivel + 1, i);
+        }
+    }
+}
+
+
+// Experimento para n = 2^10, 2^11, ..., 2^25
+int main() {
+    std::ofstream outfile("mtree_experiment_output.txt");
+
+    // int B = 4096 / sizeof(Entrada); // Calcular el tamaño máximo del bloque
+    // int b = B / 2; // Calcular el tamaño mínimo del bloque
+
+    std::vector<int> n_values;
+    for (int i = 8; i <= 8; ++i) {
+        n_values.push_back(1 << i);
+    }
+
+    double radioConsulta = 0.02;
+    std::mt19937 gen(std::random_device{}());
+    std::uniform_real_distribution<double> distribucion(0.0, 1.0);
+    
+    for (int n : n_values) {
+        std::vector<Punto> P, Q;
+        for (int i = 0; i < n; ++i) {
+            P.push_back({distribucion(gen), distribucion(gen)});
+        }
+        for (int i = 0; i < 100; ++i) {
+            Q.push_back({distribucion(gen), distribucion(gen)});
+        }
+
+        // Construir el árbol con SS
+        auto startSS = std::chrono::high_resolution_clock::now();
+        // Nodo* rootSS = metodoCP(P); // Obtengo el Nodo raíz
+        MTree treeCP = metodoCP(P); // Creo su árbol con esta raíz
+        auto endSS = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> tiempoConstruccionSS = endSS - startSS;
+        outfile << "Tiempo de construcción SS para n=" << n << ": " << tiempoConstruccionSS.count() << " segundos" << std::endl;
+
+        // Evaluar consultas
+        std::vector<int> accesosSS;
+        std::vector<int> puntosEncontradosSS;
+        auto startConsulta = std::chrono::high_resolution_clock::now();
+        for (const auto& q : Q) {
+            auto resultados = query(treeCP, q, radioConsulta);
+            int accesos = resultados.first;
+            int puntosEncontrados = resultados.second;
+            accesosSS.push_back(accesos);
+            puntosEncontradosSS.push_back(puntosEncontrados);
+        }
+        auto endConsulta = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> tiempoConsultaSS = endConsulta - startConsulta;
+        outfile << "Tiempo de consultas SS para n=" << n << ": " << tiempoConsultaSS.count() << " segundos" << std::endl;
+
+        // Calcular estadísticas para SS:
+        // Accesos
+        double mediaSS = std::accumulate(accesosSS.begin(), accesosSS.end(), 0.0) / accesosSS.size();
+        double varianzaSS = std::accumulate(accesosSS.begin(), accesosSS.end(), 0.0, [mediaSS](double sum, int x) {
+            return sum + (x - mediaSS) * (x - mediaSS);
+        }) / accesosSS.size();
+        double desviacionEstandarSS = std::sqrt(varianzaSS);
+
+        // Puntos
+        double mediaPuntosEncontradosSS = std::accumulate(puntosEncontradosSS.begin(), puntosEncontradosSS.end(), 0.0) / puntosEncontradosSS.size();
+        double varianzaPuntosEncontradosSS = std::accumulate(puntosEncontradosSS.begin(), puntosEncontradosSS.end(), 0.0, [mediaPuntosEncontradosSS](double sum, int x) {
+            return sum + (x - mediaPuntosEncontradosSS) * (x - mediaPuntosEncontradosSS);
+        }) / puntosEncontradosSS.size();
+        double desviacionEstandarPuntosEncontradosSS = std::sqrt(varianzaPuntosEncontradosSS);
+
+        outfile << "CP - Media de accesos para n=" << n << ": " << mediaSS 
+                << ", Desviación estándar: " << desviacionEstandarSS 
+                << ", Varianza: " << varianzaSS << std::endl;
+        outfile << "CP - Media de puntos encontrados para n=" << n << ": " << mediaPuntosEncontradosSS 
+                << ", Desviación estándar: " << desviacionEstandarPuntosEncontradosSS 
+                << ", Varianza: " << varianzaPuntosEncontradosSS << std::endl;
+        
+        // Imprimir el árbol
+        printTree(treeCP.raiz);
+
+        // Limpiar
+        //delete treeCP;
+    }
+
+    outfile.close();
+    return 0;
+}
+

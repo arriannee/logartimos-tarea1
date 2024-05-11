@@ -161,6 +161,7 @@ MTree metodoCP(const vector<Punto>& P) {
         h = min(h, altura(arbolTj.raiz));
     }
 
+    vector<MTree> Borrar; // Los Tj asociados a pfj que se deben eliminar 
     // Paso 9: Por cada Tj , si su altura es igual a h, se añade a T′
     for (tuple<MTree, Punto> tupla : Tj) {
         MTree arbolTj = get<0>(tupla);

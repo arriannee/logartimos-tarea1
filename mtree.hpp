@@ -75,21 +75,22 @@ int altura(Nodo* nodo){
 }
 
  // Recibe una raíz de un árbol y busca exhaustivamente todos sus subárboles de altura h, guardándolos en un vector
-void encontrarSubarboles(Nodo* nodo, int h, vector<Nodo*>& subarboles) {
+void encontrarSubarboles(Entrada entrada, int h, vector<Nodo*>& subarboles, vector<Entrada>& entradas) {
     // Si el nodo es nulo o la altura es menor a h, ningún subarbol puede tener altura igual a h, retornar
-    if (nodo == nullptr || altura(nodo) < h) {
+    if (entrada.a == nullptr || altura(entrada.a) < h) {
         return;
     }
     // Si la altura del nodo es igual a h, se agrega este nodo a la lista de subárboles
-    if (altura(nodo) == h) {
-        subarboles.push_back(nodo);
+    if (altura(entrada.a) == h) {
+        subarboles.push_back(entrada.a);
+        entradas.push_back(entrada);
         return;
     }
     // Recorrer todas las entradas del nodo
-    for (Entrada entrada : nodo->entradas) {
+    for (Entrada entrada2 : entrada.a->entradas) {
         // Si el puntero a la entrada no es nulo, se busca en el subárbol
         if (entrada.a != nullptr) {
-            encontrarSubarboles(entrada.a, h, subarboles);
+            encontrarSubarboles(entrada2, h, subarboles, entradas);
         }
     }
 }

@@ -28,4 +28,4 @@ Para compilar y ejecutar este proyecto, se necesita un compilador de C++ que sop
 # Compilación y Ejecución
 Se recomienda utilizar un entorno de desarrollo integrado (IDE) como Visual Studio Code, CLion, o cualquier otro IDE que soporte C++.
 
-Una vez abierto el proyecto en el IDE, navegue al método deseado y ejecute el archivo experiement respectivo, los resultados serán guardados en ciaccia_patella_output.txt y sexton_swinbanck_output.txt.
+Una vez abierto el proyecto en el IDE, navegue al método deseado y ejecute el archivo ```experiement_cp.cpp``` para el método Ciaccia-Patella y ```experiement_ss.cpp``` para Sexton-Swinbanck, los resultados serán guardados en ```ciaccia_patella_output.txt``` y ```sexton_swinbanck_output.txt``` respectivamente.

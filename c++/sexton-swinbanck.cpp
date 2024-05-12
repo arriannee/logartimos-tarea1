@@ -11,10 +11,8 @@
 #include <algorithm>
 #include <numeric>
 #include <cmath>
-#include <optional>
+#include <functional>
 #include <fstream>
-
-#include <optional>
 
 #include "mtree.hpp"
 
@@ -82,6 +80,21 @@ int encontrarVecinoMasCercano(const std::vector<Cluster>& clusters, const Cluste
     return indiceVecino;
 }
 
+/* DIVDIR Y CONQUISTAR ENCONTRAR PARES MÁS CERCANOS
+https://www.geeksforgeeks.org/closest-pair-of-points-onlogn-implementation/
+*/
+
+// Función auxiliar para comparar dos entradas basándose en la coordenada X del punto
+bool compareX(const Entrada& a, const Entrada& b) {
+    return a.p.x < b.p.x;
+}
+
+// Función auxiliar para comparar dos entradas basándose en la coordenada Y del punto
+bool compareY(const Entrada& a, const Entrada& b) {
+    return a.p.y < b.p.y;
+}
+
+// Función fuerza bruta (original)
 std::pair<int, int> encontrarParesMasCercanos(const std::vector<Cluster>& clusters) {
     double minDistancia = std::numeric_limits<double>::infinity();
     std::pair<int, int> indices{-1, -1};
@@ -99,6 +112,54 @@ std::pair<int, int> encontrarParesMasCercanos(const std::vector<Cluster>& cluste
     return indices;
 }
 
+// División y conquista para encontrar el par más cercano.
+std::pair<int, int> closestPair(std::vector<Cluster>& clusters) {
+    std::sort(clusters.begin(), clusters.end(), [](const Cluster& a, const Cluster& b) { // Ordenanmos en orden ascendiente los Clusters
+        return a.medoide.x < b.medoide.x;
+    });
+
+    // Función recursiva dentro de closestPair para manejar la recursividad (afecta en algo dejarlo aquí dentro?)
+    std::function<std::pair<int, int>(int, int)> closestUtil = [&](int left, int right) -> std::pair<int, int> {
+        if (right - left <= 3) {
+            return encontrarParesMasCercanos(std::vector<Cluster>(clusters.begin() + left, clusters.begin() + right));
+        }
+
+        int mid = left + (right - left) / 2;
+        auto leftPair = closestUtil(left, mid);
+        auto rightPair = closestUtil(mid, right);
+
+        double leftDist = distanciaEntreClusters(clusters[leftPair.first], clusters[leftPair.second]);
+        double rightDist = distanciaEntreClusters(clusters[rightPair.first], clusters[rightPair.second]);
+
+        std::pair<int, int> bestPair = leftDist < rightDist ? leftPair : rightPair;
+        double bestDist = std::min(leftDist, rightDist);
+
+        // Chequear la franja del medio
+        std::vector<Cluster> strip;
+        for (int i = left; i < right; ++i) {
+            if (std::abs(clusters[i].medoide.x - clusters[mid].medoide.x) < bestDist) {
+                strip.push_back(clusters[i]);
+            }
+        }
+
+        std::sort(strip.begin(), strip.end(), [](const Cluster& a, const Cluster& b) {
+            return a.medoide.y < b.medoide.y;
+        });
+
+        for (size_t i = 0; i < strip.size(); ++i) {
+            for (size_t j = i + 1; j < strip.size() && (strip[j].medoide.y - strip[i].medoide.y) < bestDist; ++j) {
+                double dist = distanciaEntreClusters(strip[i], strip[j]);
+                if (dist < bestDist) {
+                    bestDist = dist;
+                    bestPair = {i, j};
+                }
+            }
+        }
+        return bestPair;
+    };
+
+    return closestUtil(0, clusters.size());
+}
 
 // Crear un cluster con una capacidad inicial
 std::unique_ptr<Cluster> crearCluster(int capacidadInicial) {
@@ -179,7 +240,7 @@ std::vector<Cluster> cluster(const std::vector<Punto>& Cin, int B) {
     }
 
     while (C.size() > 1) {
-        auto [idx1, idx2] = encontrarParesMasCercanos(C);
+        auto [idx1, idx2] = closestPair(C);
         if (idx1 == -1 || idx2 == -1) {
             break;
         }
@@ -383,7 +444,7 @@ int main() {
         }
 
         // Construir el árbol con SS
-        auto startSS = std::chrono::high_resolution_clock::now();
+        auto startSS = std::chrono::high_resolution_clock::now(); // Comenzar a medir el tiempo
         Nodo* rootSS = SS(P, b, B); // Obtengo el Nodo raíz
         MTree treeSS(rootSS); // Creo su árbol con esta raíz
         auto endSS = std::chrono::high_resolution_clock::now();
@@ -393,15 +454,20 @@ int main() {
         // Evaluar consultas
         std::vector<int> accesosSS;
         std::vector<int> puntosEncontradosSS;
-        auto startConsulta = std::chrono::high_resolution_clock::now();
+        std::vector<double> tiemposConsultaSS;
+
         for (const auto& q : Q) {
+            auto startConsulta = std::chrono::high_resolution_clock::now(); // Comenzar a medir el tiempo de búsquea
             auto [accesos, puntosEncontrados] = query(treeSS, q, radioConsulta);
+            auto endConsulta = std::chrono::high_resolution_clock::now();
             accesosSS.push_back(accesos);
             puntosEncontradosSS.push_back(puntosEncontrados);
+            std::chrono::duration<double> tiempoConsulta = endConsulta - startConsulta;
+            tiemposConsultaSS.push_back(tiempoConsulta.count());
         }
-        auto endConsulta = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> tiempoConsultaSS = endConsulta - startConsulta;
-        outfile << "Tiempo de consultas SS para n=" << n << ": " << tiempoConsultaSS.count() << " segundos" << std::endl;
+        double tiempoTotalConsultasSS = std::accumulate(tiemposConsultaSS.begin(), tiemposConsultaSS.end(), 0.0);
+        outfile << "Tiempo total de consultas SS para n=" << n << ": " << tiempoTotalConsultasSS << " segundos" << std::endl;
+        outfile << "Tiempo promedio por consulta SS para n=" << n << ": " << tiempoTotalConsultasSS / tiemposConsultaSS.size() << " segundos" << std::endl;
 
         // Calcular estadísticas para SS:
         // Accesos
@@ -424,7 +490,20 @@ int main() {
         outfile << "SS - Media de puntos encontrados para n=" << n << ": " << mediaPuntosEncontradosSS 
                 << ", Desviación estándar: " << desviacionEstandarPuntosEncontradosSS 
                 << ", Varianza: " << varianzaPuntosEncontradosSS << std::endl;
-        
+
+        // Margen de error y Intervalo de Confianza
+        double z = 1.96; // Valor z para un intervalo de confianza del 95%
+
+        double margenErrorSS = z * (desviacionEstandarSS / std::sqrt(accesosSS.size()));
+        double limMinSS = mediaSS - margenErrorSS;
+        double limMaxSS = mediaSS + margenErrorSS;
+        outfile << "SS - Intervalo de confianza para el número de accesos con n=" << n << ": [" << limMinSS << ", " << limMaxSS << "]" << std::endl;
+
+        double margenErrorPuntosSS = z * (desviacionEstandarPuntosEncontradosSS / std::sqrt(puntosEncontradosSS.size()));
+        double icMinPuntosSS = mediaPuntosEncontradosSS - margenErrorPuntosSS;
+        double icMaxPuntosSS = mediaPuntosEncontradosSS + margenErrorPuntosSS;
+        outfile << "SS - Intervalo de confianza para el número de puntos encontrados con n=" << n << ": [" << icMinPuntosSS << ", " << icMaxPuntosSS << "] \n" << std::endl;
+                
         // Imprimir el árbol
         // printTree(rootSS);
 

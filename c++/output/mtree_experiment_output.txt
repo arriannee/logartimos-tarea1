@@ -46,3 +46,19 @@ SS - Media de puntos encontrados para n=32768: 32.83, Desviación estándar: 11.
 SS - Intervalo de confianza para el número de accesos con n=32768: [405.955, 458.925]
 SS - Intervalo de confianza para el número de puntos encontrados con n=32768: [30.5843, 35.0757] 
 
+Tiempo de construcción SS para n=65536: 7256.31 segundos
+Tiempo total de consultas SS para n=65536: 0.0378432 segundos
+Tiempo promedio por consulta SS para n=65536: 0.000378432 segundos
+SS - Media de accesos para n=65536: 714.94, Desviación estándar: 198.685, Varianza: 39475.7
+SS - Media de puntos encontrados para n=65536: 68.55, Desviación estándar: 16.6008, Varianza: 275.588
+SS - Intervalo de confianza para el número de accesos con n=65536: [675.998, 753.882]
+SS - Intervalo de confianza para el número de puntos encontrados con n=65536: [65.2962, 71.8038] 
+
+Tiempo de construcción SS para n=131072: 16916.5 segundos
+Tiempo total de consultas SS para n=131072: 0.0821552 segundos
+Tiempo promedio por consulta SS para n=131072: 0.000821552 segundos
+SS - Media de accesos para n=131072: 1651.54, Desviación estándar: 338.768, Varianza: 114764
+SS - Media de puntos encontrados para n=131072: 139.58, Desviación estándar: 26.9856, Varianza: 728.224
+SS - Intervalo de confianza para el número de accesos con n=131072: [1585.14, 1717.94]
+SS - Intervalo de confianza para el número de puntos encontrados con n=131072: [134.291, 144.869] 
+

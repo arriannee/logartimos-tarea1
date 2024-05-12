@@ -38,3 +38,11 @@ SS - Media de puntos encontrados para n=16384: 11.39, Desviación estándar: 4.5
 SS - Intervalo de confianza para el número de accesos con n=16384: [120.662, 134.678]
 SS - Intervalo de confianza para el número de puntos encontrados con n=16384: [10.4944, 12.2856] 
 
+Tiempo de construcción SS para n=32768: 1727.53 segundos
+Tiempo total de consultas SS para n=32768: 0.0201782 segundos
+Tiempo promedio por consulta SS para n=32768: 0.000201782 segundos
+SS - Media de accesos para n=32768: 432.44, Desviación estándar: 135.129, Varianza: 18259.8
+SS - Media de puntos encontrados para n=32768: 32.83, Desviación estándar: 11.4578, Varianza: 131.281
+SS - Intervalo de confianza para el número de accesos con n=32768: [405.955, 458.925]
+SS - Intervalo de confianza para el número de puntos encontrados con n=32768: [30.5843, 35.0757] 
+

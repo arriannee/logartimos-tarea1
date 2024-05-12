@@ -44,9 +44,10 @@ MTree metodoCP(const vector<Punto>& P) {
     vector<tuple<vector<Punto>, Punto>> F_j;
 
     do {
-        vector<Punto> F;
-        vector<tuple<vector<Punto>, Punto>> F_j;
-        
+        F.clear();
+        F_j.clear();
+        cout << "inicio " << F.size() << "\n";
+
         // Paso 2: De manera aleatoria se eligen k = min(B, n/B) puntos de P, que los llamaremos samples pf1, ..., pfk. Se insertan en un conjunto F de samples
         int k = int(ceil(min(double(B), double(n)/B)));  // Número de samples
         for (int i = 0; i < k; i++) {
@@ -87,9 +88,12 @@ MTree metodoCP(const vector<Punto>& P) {
         // Paso 4: Etapa de redistribución: Si algún Fj es tal que |Fj |< b:
         // Paso 4.1 Quitamos pfj de F
         for (auto tupla : F_j){
+            cout << "entramos al for 4: " << F.size() << "\n";
+            cout << "tamaño Fi: " << get<0>(tupla).size() << "\n";
             if (get<0>(tupla).size() < b) {
                 Punto puntoABuscar = get<1>(tupla);
                 borrarPuntoDeVector(puntoABuscar, F);
+                cout << "si |Fj| < b, después de eliminar: " << F.size() << "\n";
                 // Paso 4.2 Por cada p ∈ Fj , le buscamos el sample pfl más cercano de F y lo añadimos a su conjunto F_j
                 // Esto es, en esencia, repetir el paso 3
                 for (Punto puntoFj : get<0>(tupla)) {
@@ -113,10 +117,11 @@ MTree metodoCP(const vector<Punto>& P) {
                     }
                 }
             }         
-        }    
+        }
+        cout <<"final: " << F.size() << "\n";    
     } while (F.size() == 1); // Paso 5: Si |F|= 1, volver al paso 2.
      
-
+    /*
     vector<tuple<MTree, Punto>> Tj;
     // Paso 6: Se realiza recursivamente el algoritmo CP en cada Fj, obteniendo el arbol Tj
     for (auto &tupla : F_j) {
@@ -184,12 +189,13 @@ MTree metodoCP(const vector<Punto>& P) {
             }
             }
         }
-
     }
+    */
 
     // Paso 10: Se define Tsup como el resultado de la llamada al algoritmo CP aplicado a F
     MTree Tsup = metodoCP(F);
 
+    /*
     // Paso 11: Se une cada Tj ∈ T′ a su hoja en Tsup correspondiente al punto pfj ∈ F
     for (Entrada entradaTsup : Tsup.raiz->entradas) {   // Para cada entrada de Tsup
         for (tuple<MTree, Punto> tuplaTj : Tj) {        // Para cada Tj
@@ -202,6 +208,7 @@ MTree metodoCP(const vector<Punto>& P) {
         }
     }
     // obteniendo un nuevo árbol T
+    */
     MTree T = Tsup;
 
     // Paso 12: Se setean los radios cobertores resultantes para cada entrada en este árbol

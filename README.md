@@ -26,6 +26,6 @@ logaritmos-tarea1/
 Para compilar y ejecutar este proyecto, se necesita un compilador de C++ que soporte C++11 o superior. No se requieren bibliotecas externas adicionales.
 
 # Compilación y Ejecución
-Se recomienda utilizar un entorno de desarrollo integrado (IDE) como Visual Studio Code, CLion, o cualquier otro IDE que soporte C++, para compilar y ejecutar este proyecto. Esto facilita la gestión del código y la compilación, y a menudo proporciona herramientas adicionales útiles para la depuración y la ejecución.
+Se recomienda utilizar un entorno de desarrollo integrado (IDE) como Visual Studio Code, CLion, o cualquier otro IDE que soporte C++, para compilar y ejecutar este proyecto. 
 
 Una vez abierto el proyecto en el IDE, navegue al método deseado y ejecute el archivo experiement respectivo, los resultados serán guardados en ciaccia_patella_output.txt y sexton_swinbanck_output.txt.

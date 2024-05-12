@@ -46,7 +46,7 @@ MTree metodoCP(const vector<Punto>& P) {
     do {
         F.clear();
         F_j.clear();
-        cout << "inicio " << F.size() << "\n";
+        cout << "inicio " << F.size() << "---------------------------------\n";
 
         // Paso 2: De manera aleatoria se eligen k = min(B, n/B) puntos de P, que los llamaremos samples pf1, ..., pfk. Se insertan en un conjunto F de samples
         int k = int(ceil(min(double(B), double(n)/B)));  // Número de samples
@@ -54,6 +54,8 @@ MTree metodoCP(const vector<Punto>& P) {
             Punto pfi = P[rand() % n]; // Se elijen samples aleatorios
             F.push_back(pfi); // Se inserta el sample pfi en F
         }
+        cout << "puntos elegidos : " << F[0].x << ", " << F[0].y << "\n";
+        cout << F[1].x << ", " << F[1].y << "\n";
 
         // Paso 3: Se le asigna a cada punto en P su sample más cercano. Con eso se puede construir k conjuntos F1, . . . , Fk     
         // Se crean los conjuntos Fi pertenecientes a F_j
@@ -66,14 +68,16 @@ MTree metodoCP(const vector<Punto>& P) {
         // Para cada elemento de P, se revisa su distancia con cada elemento de F y nos quedamos con la que sea menor    
         for (Punto puntoP : P) {
             // Para comenzar decimos que el más cercano es el primero en F
-            int menorDistancia = distanciaEuclidiana(puntoP, *F.begin());
-            Punto puntoMasCercano = *F.begin();
+            int menorDistancia = INT_MAX;
+            Punto puntoMasCercano = Punto(0.0,0.0);
             // Ahora revisamos el resto de F
-            for (Punto &puntoF : F) {
+            for (Punto puntoF : F) {
                 int dist = distanciaEuclidiana(puntoP, puntoF);
+                cout << "se compara con F: " << puntoF.x << ", " << puntoF.y << "\n";
                 if (dist < menorDistancia) {
                     menorDistancia = dist;
                     puntoMasCercano = puntoF;
+                    cout << "el punto más cercano es :" << puntoMasCercano.x << ", " << puntoMasCercano.y << "\n";
                 }
             }
             // Buscamos el pfi donde debemos insertar el puntoP
@@ -88,12 +92,13 @@ MTree metodoCP(const vector<Punto>& P) {
         // Paso 4: Etapa de redistribución: Si algún Fj es tal que |Fj |< b:
         // Paso 4.1 Quitamos pfj de F
         for (auto tupla : F_j){
-            cout << "entramos al for 4: " << F.size() << "\n";
+            cout << "entramos al for 4, F size: " << F.size() << "\n";
             cout << "tamaño Fi: " << get<0>(tupla).size() << "\n";
             if (get<0>(tupla).size() < b) {
                 Punto puntoABuscar = get<1>(tupla);
                 borrarPuntoDeVector(puntoABuscar, F);
-                cout << "si |Fj| < b, después de eliminar: " << F.size() << "\n";
+                cout << "si |Fj| < b, después de eliminar F size: " << F.size() << "\n";
+                cout << "valor de b: " << b << "\n";
                 // Paso 4.2 Por cada p ∈ Fj , le buscamos el sample pfl más cercano de F y lo añadimos a su conjunto F_j
                 // Esto es, en esencia, repetir el paso 3
                 for (Punto puntoFj : get<0>(tupla)) {

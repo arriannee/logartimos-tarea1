@@ -28,9 +28,9 @@ int b = 0.5*B;
 
 // Método Ciaccia-Patella (CP)
 MTree metodoCP(const vector<Punto>& P) {
-    int n = P.size();
+    int n = P.size(); 
     // Paso 1: Si |P| ≤ B, se crea un árbol T , se insertan todos los puntos a T y se retorna T
-    if (n <= B) {
+    if (n <= B) { 
         vector<Entrada> entradas;
         for (int i = 0; i < n; i++) {
             Entrada entrada(P[i], 0, nullptr);
@@ -162,7 +162,7 @@ MTree metodoCP(const vector<Punto>& P) {
     }
 
     vector<MTree> Borrar; // Los Tj asociados a pfj que se deben eliminar 
-    
+
     // Paso 9: Por cada Tj , si su altura es igual a h, se añade a T′
     for (tuple<MTree, Punto> tupla : Tj) {
         MTree arbolTj = get<0>(tupla);
@@ -187,7 +187,7 @@ MTree metodoCP(const vector<Punto>& P) {
                 TPrima.push_back(TPrima_i);
             // Paso 9.3: Se insertan los puntos raíz de T′1 , . . . , T′p , pf1', . . . , pfp' en F
             for (Entrada raiz : raices) {
-                // entrada.p son los puntos raíz de T'i
+                // raiz.p son los puntos raíz de T'i
                 F.push_back(raiz.p);
             }
             }

@@ -1,4 +1,4 @@
-Tiempo de construcción SS para n=256: 0 segundos
+Tiempo de construcción SS para n=256: 0.008003 segundos
 Tiempo de consultas SS para n=256: 0 segundos
 CP - Media de accesos para n=256: 1, Desviación estándar: 0, Varianza: 0
 CP - Media de puntos encontrados para n=256: 0, Desviación estándar: 0, Varianza: 0

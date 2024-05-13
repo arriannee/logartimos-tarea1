@@ -1,26 +1,31 @@
-# *Tarea 1: M-Tree*
+# Tarea 1: M-Tree
 
 Este proyecto implementa dos métodos para construir un árbol métrico (M-Tree) en C. Un M-Tree es un árbol balanceado utilizado para indexar datos basados en métricas, permitiendo búsquedas eficientes. Los dos métodos implementados son el método Ciaccia-Patella (CP) y el método Sexton-Swinbank (SS). El lenguaje de programación a utilizar fue C.
 
-## *Estructuras de Datos*
+# Estrucutra del Repositorio
+```
+logaritmos-tarea1/
+│
+├── ciaccia-patella/         # Código Ciaccia-Patella 
+│   ├── output/
+│   ├── ciaccia-patella.hpp
+│   ├── experiment_cp.cpp 
+│   └── mtree_cp.hpp
+│
+├── sexton-swinbank/         # Código Sexton-Swinbank
+│   ├── output/
+│   ├── experiment_ss.cpp 
+│   ├── mtree_ss.hpp 
+│   └── sexton-swinbank.hpp
+│
+├── README.md                
+└── tarea1logaritmos.pdf     # Enunciado
+```
 
-Punto: Representa un punto en un plano bidimensional con coordenadas x y y.
+# Requisitos
+Para compilar y ejecutar este proyecto, se necesita un compilador de C++ que soporte C++11 o superior. No se requieren bibliotecas externas adicionales.
 
-NodoMTree: Representa un nodo en el M-Tree, con un punto central p, un radio de cobertura cr, y una lista de hijos.
+# Compilación y Ejecución
+Se recomienda utilizar un entorno de desarrollo integrado (IDE) como Visual Studio Code, CLion, o cualquier otro IDE que soporte C++.
 
-Cluster: Estructura auxiliar utilizada para agrupar puntos durante el proceso de construcción del M-Tree.
-
-## *Funciones Clave*
-
-distancia: Calcula la distancia euclidiana entre dos puntos.
-crearNodo: Crea un nodo para el M-Tree con un punto y un radio de cobertura.
-
-find_closest_clusters: Encuentra los dos clusters más cercanos dentro de un conjunto de clusters.
-
-## *Métodos de Construcción*
-
-Método Ciaccia-Patella (CP): 
-
-Método Sexton-Swinbank (SS): 
-
-## *Instrucciones*
+Una vez abierto el proyecto en el IDE, navegue al método deseado y ejecute el archivo ```experiement_cp.cpp``` para el método Ciaccia-Patella y ```experiement_ss.cpp``` para Sexton-Swinbanck, los resultados serán guardados en ```ciaccia_patella_output.txt``` y ```sexton_swinbanck_output.txt``` respectivamente.

@@ -1,0 +1,80 @@
+Tiempo de construcción CP para n=1024: 0.405077 segundos
+Tiempo total de consultas CP para n=1024: 0.0006285 segundos
+Tiempo promedio por consulta CP para n=1024: 6.285e-06 segundos
+CP - Media de accesos para n=1024: 8.06, Desviación estándar: 1.84293, Varianza: 3.3964
+CP - Media de puntos encontrados para n=1024: 1.47, Desviación estándar: 1.15287, Varianza: 1.3291
+CP - Intervalo de confianza para el número de accesos con n=1024: [7.69879, 8.42121]
+CP - Intervalo de confianza para el número de puntos encontrados con n=1024: [1.24404, 1.69596] 
+
+Tiempo de construcción CP para n=2048: 0.448801 segundos
+Tiempo total de consultas CP para n=2048: 0.0004269 segundos
+Tiempo promedio por consulta CP para n=2048: 4.269e-06 segundos
+CP - Media de accesos para n=2048: 9.72, Desviación estándar: 2.31983, Varianza: 5.3816
+CP - Media de puntos encontrados para n=2048: 2.47, Desviación estándar: 1.47279, Varianza: 2.1691
+CP - Intervalo de confianza para el número de accesos con n=2048: [9.26531, 10.1747]
+CP - Intervalo de confianza para el número de puntos encontrados con n=2048: [2.18133, 2.75867] 
+
+Tiempo de construcción CP para n=4096: 0.99878 segundos
+Tiempo total de consultas CP para n=4096: 0.0004476 segundos
+Tiempo promedio por consulta CP para n=4096: 4.476e-06 segundos
+CP - Media de accesos para n=4096: 14.92, Desviación estándar: 2.77734, Varianza: 7.7136
+CP - Media de puntos encontrados para n=4096: 4.76, Desviación estándar: 2.36271, Varianza: 5.5824
+CP - Intervalo de confianza para el número de accesos con n=4096: [14.3756, 15.4644]
+CP - Intervalo de confianza para el número de puntos encontrados con n=4096: [4.29691, 5.22309] 
+
+Tiempo de construcción CP para n=8192: 1.87094 segundos
+Tiempo total de consultas CP para n=8192: 0.0015106 segundos
+Tiempo promedio por consulta CP para n=8192: 1.5106e-05 segundos
+CP - Media de accesos para n=8192: 17.25, Desviación estándar: 4.54615, Varianza: 20.6675
+CP - Media de puntos encontrados para n=8192: 10.3, Desviación estándar: 3.08707, Varianza: 9.53
+CP - Intervalo de confianza para el número de accesos con n=8192: [16.359, 18.141]
+CP - Intervalo de confianza para el número de puntos encontrados con n=8192: [9.69493, 10.9051] 
+
+Tiempo de construcción CP para n=16384: 4.32754 segundos
+Tiempo total de consultas CP para n=16384: 0.0017042 segundos
+Tiempo promedio por consulta CP para n=16384: 1.7042e-05 segundos
+CP - Media de accesos para n=16384: 23.15, Desviación estándar: 4.41899, Varianza: 19.5275
+CP - Media de puntos encontrados para n=16384: 20.8, Desviación estándar: 5.47723, Varianza: 30
+CP - Intervalo de confianza para el número de accesos con n=16384: [22.2839, 24.0161]
+CP - Intervalo de confianza para el número de puntos encontrados con n=16384: [19.7265, 21.8735] 
+
+Tiempo de construcción CP para n=32768: 13.3752 segundos
+Tiempo total de consultas CP para n=32768: 0.0015368 segundos
+Tiempo promedio por consulta CP para n=32768: 1.5368e-05 segundos
+CP - Media de accesos para n=32768: 55.98, Desviación estándar: 9.63533, Varianza: 92.8396
+CP - Media de puntos encontrados para n=32768: 39.4, Desviación estándar: 6.84982, Varianza: 46.92
+CP - Intervalo de confianza para el número de accesos con n=32768: [54.0915, 57.8685]
+CP - Intervalo de confianza para el número de puntos encontrados con n=32768: [38.0574, 40.7426] 
+
+Tiempo de construcción CP para n=65536: 14.5574 segundos
+Tiempo total de consultas CP para n=65536: 0.0022769 segundos
+Tiempo promedio por consulta CP para n=65536: 2.2769e-05 segundos
+CP - Media de accesos para n=65536: 96.1, Desviación estándar: 13.4896, Varianza: 181.97
+CP - Media de puntos encontrados para n=65536: 80.8, Desviación estándar: 11.1633, Varianza: 124.62
+CP - Intervalo de confianza para el número de accesos con n=65536: [93.456, 98.744]
+CP - Intervalo de confianza para el número de puntos encontrados con n=65536: [78.612, 82.988] 
+
+Tiempo de construcción CP para n=131072: 47.9019 segundos
+Tiempo total de consultas CP para n=131072: 0.0033795 segundos
+Tiempo promedio por consulta CP para n=131072: 3.3795e-05 segundos
+CP - Media de accesos para n=131072: 138.8, Desviación estándar: 22.8639, Varianza: 522.76
+CP - Media de puntos encontrados para n=131072: 162.8, Desviación estándar: 15.7766, Varianza: 248.9
+CP - Intervalo de confianza para el número de accesos con n=131072: [134.319, 143.281]
+CP - Intervalo de confianza para el número de puntos encontrados con n=131072: [159.708, 165.892] 
+
+Tiempo de construcción CP para n=262144: 51.0703 segundos
+Tiempo total de consultas CP para n=262144: 0.0061019 segundos
+Tiempo promedio por consulta CP para n=262144: 6.1019e-05 segundos
+CP - Media de accesos para n=262144: 245.65, Desviación estándar: 34.453, Varianza: 1187.01
+CP - Media de puntos encontrados para n=262144: 320.14, Desviación estándar: 33.1424, Varianza: 1098.42
+CP - Intervalo de confianza para el número de accesos con n=262144: [238.897, 252.403]
+CP - Intervalo de confianza para el número de puntos encontrados con n=262144: [313.644, 326.636] 
+
+Tiempo de construcción CP para n=524288: 527.161 segundos
+Tiempo total de consultas CP para n=524288: 0.0405121 segundos
+Tiempo promedio por consulta CP para n=524288: 0.000405121 segundos
+CP - Media de accesos para n=524288: 514.08, Desviación estándar: 70.5774, Varianza: 4981.17
+CP - Media de puntos encontrados para n=524288: 643.86, Desviación estándar: 64.9631, Varianza: 4220.2
+CP - Intervalo de confianza para el número de accesos con n=524288: [500.247, 527.913]
+CP - Intervalo de confianza para el número de puntos encontrados con n=524288: [631.127, 656.593] 
+
